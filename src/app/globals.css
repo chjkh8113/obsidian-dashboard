@@ -23,19 +23,19 @@ body {
   font-size: 14px;
 }
 
-/* Smaller typography throughout */
-h1 { font-size: 1.25rem !important; }
-h2 { font-size: 1.1rem !important; }
-h3 { font-size: 1rem !important; }
-p, span, button { font-size: 0.8rem; }
-.text-3xl { font-size: 1.5rem !important; }
-.text-4xl { font-size: 1.75rem !important; }
-.text-2xl { font-size: 1.15rem !important; }
-.text-xl { font-size: 1rem !important; }
-.text-lg { font-size: 0.9rem !important; }
-.text-base { font-size: 0.8rem !important; }
-.text-sm { font-size: 0.75rem !important; }
-.text-xs { font-size: 0.65rem !important; }
+/* Compact enterprise typography */
+h1 { font-size: 0.9rem !important; }
+h2 { font-size: 0.8rem !important; }
+h3 { font-size: 0.75rem !important; }
+p, span, button { font-size: 0.7rem; }
+.text-3xl { font-size: 1.1rem !important; }
+.text-4xl { font-size: 1.25rem !important; }
+.text-2xl { font-size: 0.9rem !important; }
+.text-xl { font-size: 0.8rem !important; }
+.text-lg { font-size: 0.75rem !important; }
+.text-base { font-size: 0.7rem !important; }
+.text-sm { font-size: 0.65rem !important; }
+.text-xs { font-size: 0.6rem !important; }
 
 /* Dusk Background with Image - Blurred */
 .ambient-bg {
@@ -64,46 +64,38 @@ p, span, button { font-size: 0.8rem; }
   z-index: 1;
 }
 
-/* Floating Header - Warm glass */
+/* Floating Header - Compact */
 .header-float {
   background: rgba(45, 31, 34, 0.75);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(212, 168, 154, 0.12);
-  border-radius: 18px;
-  margin: 16px 24px;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 168, 154, 0.08);
+  border-radius: 8px;
+  margin: 8px 12px;
 }
 
-/* Glass Card - Warm tinted glass */
+/* Glass Card - Compact enterprise style */
 .glass-card {
   position: relative;
   background: rgba(45, 31, 34, 0.65);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-radius: 24px;
+  border-radius: 12px;
   border: 1px solid rgba(212, 168, 154, 0.1);
-  transition: all 0.3s ease;
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .glass-card:hover {
   background: rgba(45, 31, 34, 0.75);
   border-color: rgba(212, 168, 154, 0.18);
-  box-shadow: 
-    0 16px 48px rgba(0, 0, 0, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Slow Rotating Border - Dusk tones */
+/* Subtle Border - Dusk tones */
 .glow-border {
   position: relative;
-  border-radius: 24px;
+  border-radius: 12px;
 }
 
 .glow-border::before {
@@ -113,18 +105,18 @@ p, span, button { font-size: 0.8rem; }
   background: conic-gradient(
     from var(--border-angle, 0deg),
     transparent 0%,
-    rgba(212, 168, 154, 0.25) 8%,
-    rgba(232, 196, 184, 0.4) 12%,
-    rgba(212, 168, 154, 0.25) 16%,
-    transparent 25%,
-    transparent 75%,
-    rgba(212, 168, 154, 0.25) 84%,
-    rgba(232, 196, 184, 0.4) 88%,
-    rgba(212, 168, 154, 0.25) 92%,
+    rgba(212, 168, 154, 0.15) 10%,
+    rgba(232, 196, 184, 0.25) 15%,
+    rgba(212, 168, 154, 0.15) 20%,
+    transparent 30%,
+    transparent 70%,
+    rgba(212, 168, 154, 0.15) 80%,
+    rgba(232, 196, 184, 0.25) 85%,
+    rgba(212, 168, 154, 0.15) 90%,
     transparent 100%
   );
-  border-radius: 25px;
-  animation: rotate-border 30s linear infinite;
+  border-radius: 13px;
+  animation: rotate-border 40s linear infinite;
   z-index: -1;
 }
 
@@ -133,7 +125,7 @@ p, span, button { font-size: 0.8rem; }
   position: absolute;
   inset: 0;
   background: rgba(26, 18, 21, 0.95);
-  border-radius: 24px;
+  border-radius: 12px;
   z-index: -1;
 }
 
@@ -242,24 +234,19 @@ p, span, button { font-size: 0.8rem; }
   box-shadow: 0 0 10px rgba(212, 168, 154, 0.6), 0 0 20px rgba(212, 168, 154, 0.4) !important;
 }
 
-/* KPI Card - Warm glass */
+/* KPI Card - Compact */
 .kpi-card {
   background: rgba(45, 31, 34, 0.55);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
   border: 1px solid rgba(212, 168, 154, 0.08);
-  border-radius: 16px;
-  transition: all 0.25s ease;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .kpi-card:hover {
   background: rgba(45, 31, 34, 0.7);
   border-color: rgba(212, 168, 154, 0.15);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transform: translateY(-2px);
 }
 
 /* Status Dot */
@@ -338,34 +325,33 @@ p, span, button { font-size: 0.8rem; }
   pointer-events: none;
 }
 
-/* Sidebar */
+/* Sidebar - Compact */
 .sidebar-glass {
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 220px;
+  width: 140px;
   background: rgba(45, 31, 34, 0.7);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-right: 1px solid rgba(212, 168, 154, 0.1);
+  border-right: 1px solid rgba(212, 168, 154, 0.08);
   display: flex;
   flex-direction: column;
   z-index: 100;
-  padding-top: 24px;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  padding-top: 12px;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   cursor: pointer;
   border: 1px solid transparent;
   background: transparent;
@@ -375,21 +361,21 @@ p, span, button { font-size: 0.8rem; }
 
 .sidebar-item:hover {
   color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .sidebar-item-active {
-  color: #e8c4b8;
-  background: rgba(212, 168, 154, 0.15);
-  border-color: rgba(212, 168, 154, 0.2);
+  color: #d4a89a;
+  background: rgba(212, 168, 154, 0.12);
+  border-color: rgba(212, 168, 154, 0.15);
 }
 
 .sidebar-item-active:hover {
-  color: #e8c4b8;
-  background: rgba(212, 168, 154, 0.2);
+  color: #d4a89a;
+  background: rgba(212, 168, 154, 0.15);
 }
 
 /* Adjust main content for sidebar */
 .flex-1 {
-  margin-left: 220px;
+  margin-left: 140px;
 }
