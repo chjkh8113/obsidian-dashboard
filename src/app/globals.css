@@ -74,7 +74,7 @@ p, span, button { font-size: 0.7rem; }
   margin: 8px 12px;
 }
 
-/* Glass Card - Compact enterprise style */
+/* Glass Card - With shadow */
 .glass-card {
   position: relative;
   background: rgba(45, 31, 34, 0.65);
@@ -83,13 +83,19 @@ p, span, button { font-size: 0.7rem; }
   border-radius: 12px;
   border: 1px solid rgba(212, 168, 154, 0.1);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .glass-card:hover {
   background: rgba(45, 31, 34, 0.75);
   border-color: rgba(212, 168, 154, 0.18);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Subtle Border - Dusk tones */
@@ -234,7 +240,7 @@ p, span, button { font-size: 0.7rem; }
   box-shadow: 0 0 10px rgba(212, 168, 154, 0.6), 0 0 20px rgba(212, 168, 154, 0.4) !important;
 }
 
-/* KPI Card - Compact */
+/* KPI Card - With shadow */
 .kpi-card {
   background: rgba(45, 31, 34, 0.55);
   backdrop-filter: blur(16px) saturate(150%);
@@ -242,11 +248,17 @@ p, span, button { font-size: 0.7rem; }
   border: 1px solid rgba(212, 168, 154, 0.08);
   border-radius: 8px;
   transition: all 0.2s ease;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .kpi-card:hover {
   background: rgba(45, 31, 34, 0.7);
   border-color: rgba(212, 168, 154, 0.15);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 /* Status Dot */
