@@ -5,15 +5,14 @@ import { motion } from 'framer-motion';
 import { 
   Activity, Cpu, HardDrive, Network, Server, Database, Box, Cloud,
   AlertTriangle, CheckCircle, XCircle, Clock, TrendingUp, TrendingDown,
-  Zap, Shield, Terminal, Globe, Layers, GitBranch, Play, AlertCircle, 
-  Info, ChevronRight, Settings, Bell, Search, User
+  Zap, Shield, Layers, GitBranch, AlertCircle, Info, ChevronRight, 
+  Settings, Bell
 } from 'lucide-react';
 import { 
   AreaChart, Area, ResponsiveContainer, XAxis, YAxis, 
-  PieChart, Pie, Cell, LineChart, Line, Tooltip, BarChart, Bar
+  PieChart, Pie, Cell, LineChart, Line, Tooltip
 } from 'recharts';
 
-// Generate mock time-series data
 const generateTimeSeriesData = (points = 30) => {
   const now = new Date();
   return Array.from({ length: points }, (_, i) => {
@@ -27,94 +26,107 @@ const generateTimeSeriesData = (points = 30) => {
   });
 };
 
-// KPI Card Component
+// Raycast-style Icon
+function RaycastIcon({ 
+  icon: Icon, 
+  size = 32, 
+  color = 'violet',
+  containerSize = 64 
+}: { 
+  icon: React.ElementType; 
+  size?: number; 
+  color?: string;
+  containerSize?: number;
+}) {
+  const colorClasses: Record<string, string> = {
+    violet: 'icon-violet text-violet-400',
+    emerald: 'icon-emerald text-emerald-400',
+    amber: 'icon-amber text-amber-400',
+    rose: 'icon-rose text-rose-400',
+    cyan: 'icon-cyan text-cyan-400',
+    blue: 'icon-blue text-blue-400',
+  };
+
+  return (
+    <div 
+      className={`icon-container ${colorClasses[color]}`}
+      style={{ width: containerSize, height: containerSize }}
+    >
+      <Icon size={size} />
+    </div>
+  );
+}
+
+// KPI Card
 function KPICard({ 
   icon: Icon, 
   value, 
   label, 
   trend, 
   trendValue,
-  glowColor = 'violet'
+  color = 'violet'
 }: {
   icon: React.ElementType;
   value: string | number;
   label: string;
   trend?: 'up' | 'down' | 'stable';
   trendValue?: string;
-  glowColor?: 'violet' | 'emerald' | 'amber' | 'rose' | 'cyan' | 'blue';
+  color?: string;
 }) {
-  const glowClasses = {
-    violet: 'icon-glow',
-    emerald: 'icon-glow-emerald',
-    amber: 'icon-glow-amber',
-    rose: 'icon-glow-rose',
-    cyan: 'icon-glow-cyan',
-    blue: 'icon-glow',
-  };
-
-  const iconColors = {
-    violet: 'text-violet-400',
-    emerald: 'text-emerald-400',
-    amber: 'text-amber-400',
-    rose: 'text-rose-400',
-    cyan: 'text-cyan-400',
-    blue: 'text-blue-400',
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="kpi-card p-5 flex items-center gap-4"
+      whileHover={{ scale: 1.02 }}
+      className="kpi-card p-6"
     >
-      <div className={`w-14 h-14 rounded-2xl ${glowClasses[glowColor]} flex items-center justify-center`}>
-        <Icon size={26} className={iconColors[glowColor]} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
-          {trend && trendValue && (
-            <span className={`text-xs font-semibold flex items-center gap-0.5 px-2 py-0.5 rounded-full ${
-              trend === 'up' ? 'text-emerald-400 bg-emerald-500/10' : 
-              trend === 'down' ? 'text-rose-400 bg-rose-500/10' : 
-              'text-white/40 bg-white/5'
-            }`}>
-              {trend === 'up' ? <TrendingUp size={12} /> : trend === 'down' ? <TrendingDown size={12} /> : null}
-              {trendValue}
-            </span>
-          )}
+      <div className="flex items-center gap-5">
+        <RaycastIcon icon={Icon} size={28} color={color} containerSize={56} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
+            {trend && trendValue && (
+              <span className={`text-xs font-semibold flex items-center gap-1 px-2.5 py-1 rounded-full ${
+                trend === 'up' ? 'text-emerald-400 bg-emerald-500/15' : 
+                trend === 'down' ? 'text-rose-400 bg-rose-500/15' : 
+                'text-white/40 bg-white/5'
+              }`}>
+                {trend === 'up' ? <TrendingUp size={14} /> : trend === 'down' ? <TrendingDown size={14} /> : null}
+                {trendValue}
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-white/40 mt-1.5">{label}</p>
         </div>
-        <p className="text-sm text-white/40 mt-1">{label}</p>
       </div>
     </motion.div>
   );
 }
 
-// Large Performance Chart
+// Performance Chart
 function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeriesData> }) {
   const [activeMetric, setActiveMetric] = useState<'cpu' | 'memory' | 'network' | 'all'>('all');
   
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <div className="flex items-center justify-between mb-8">
+    <div className="glow-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10"
+      >
+        <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className="text-xl font-bold text-white">Real-time Performance</h2>
-            <p className="text-sm text-white/40 mt-1">System metrics over the last 2 hours</p>
+            <h2 className="text-2xl font-bold text-white">Real-time Performance</h2>
+            <p className="text-sm text-white/40 mt-2">System metrics over the last 2 hours</p>
           </div>
-          <div className="flex gap-1 p-1.5 bg-white/[0.03] rounded-xl border border-white/[0.04]">
+          <div className="flex gap-1.5 p-2 bg-white/[0.03] rounded-2xl border border-white/[0.04]">
             {(['cpu', 'memory', 'network', 'all'] as const).map((metric) => (
               <button
                 key={metric}
                 onClick={() => setActiveMetric(metric)}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+                className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                   activeMetric === metric 
-                    ? 'bg-violet-500/20 text-violet-300 shadow-lg shadow-violet-500/10' 
+                    ? 'bg-violet-500/20 text-violet-300 shadow-lg shadow-violet-500/20' 
                     : 'text-white/40 hover:text-white/60 hover:bg-white/[0.03]'
                 }`}
               >
@@ -124,73 +136,54 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
           </div>
         </div>
         
-        <div style={{ width: '100%', height: 320 }}>
+        <div style={{ width: '100%', height: 360 }}>
           <ResponsiveContainer>
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.4} />
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.5} />
                   <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.4} />
+                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
                   <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorNetwork" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.4} />
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.5} />
                   <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis 
-                dataKey="time" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
-                interval="preserveStartEnd"
-              />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 11 }}
-                width={45}
-              />
-              <Tooltip
-                contentStyle={{
-                  background: 'rgba(0,0,0,0.9)',
-                  border: '1px solid rgba(139, 92, 246, 0.2)',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  boxShadow: '0 0 20px rgba(139, 92, 246, 0.2)'
-                }}
-              />
+              <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.2)', fontSize: 12 }} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.2)', fontSize: 12 }} width={50} />
+              <Tooltip contentStyle={{ background: 'rgba(0,0,0,0.9)', border: '1px solid rgba(140,80,200,0.3)', borderRadius: '16px', fontSize: '13px' }} />
               {(activeMetric === 'cpu' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="cpu" stroke="#8b5cf6" strokeWidth={2.5} fill="url(#colorCpu)" />
+                <Area type="monotone" dataKey="cpu" stroke="#8b5cf6" strokeWidth={3} fill="url(#colorCpu)" />
               )}
               {(activeMetric === 'memory' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="memory" stroke="#10b981" strokeWidth={2.5} fill="url(#colorMemory)" />
+                <Area type="monotone" dataKey="memory" stroke="#10b981" strokeWidth={3} fill="url(#colorMemory)" />
               )}
               {(activeMetric === 'network' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="network" stroke="#06b6d4" strokeWidth={2.5} fill="url(#colorNetwork)" />
+                <Area type="monotone" dataKey="network" stroke="#06b6d4" strokeWidth={3} fill="url(#colorNetwork)" />
               )}
             </AreaChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="grid grid-cols-4 gap-6 mt-8 pt-6 border-t border-white/[0.04]">
+        <div className="grid grid-cols-4 gap-6 mt-10 pt-8 border-t border-white/[0.04]">
           {[
-            { label: 'CPU Usage', value: '44%', color: 'text-violet-400', bg: 'bg-violet-500/10' },
-            { label: 'Memory', value: '59%', color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
-            { label: 'Network I/O', value: '259 Mbps', color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-            { label: 'Disk Usage', value: '78%', color: 'text-amber-400', bg: 'bg-amber-500/10' },
+            { label: 'CPU Usage', value: '44%', color: 'bg-violet-500/15 text-violet-400' },
+            { label: 'Memory', value: '59%', color: 'bg-emerald-500/15 text-emerald-400' },
+            { label: 'Network I/O', value: '259 Mbps', color: 'bg-cyan-500/15 text-cyan-400' },
+            { label: 'Disk Usage', value: '78%', color: 'bg-amber-500/15 text-amber-400' },
           ].map((stat) => (
-            <div key={stat.label} className={`text-center p-4 rounded-xl ${stat.bg}`}>
-              <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-white/40 mt-2 font-medium">{stat.label}</p>
+            <div key={stat.label} className={`text-center p-5 rounded-2xl ${stat.color.split(' ')[0]}`}>
+              <p className={`text-4xl font-bold ${stat.color.split(' ')[1]}`}>{stat.value}</p>
+              <p className="text-sm text-white/40 mt-2 font-medium">{stat.label}</p>
             </div>
           ))}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -205,27 +198,20 @@ function AlertDistribution() {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.15 }}
-      className="glow-border h-full"
-    >
-      <div className="glass-panel-elevated p-8 h-full card-hover-glow">
-        <h2 className="text-xl font-bold text-white mb-2">Alert Distribution</h2>
-        <p className="text-sm text-white/40 mb-6">By severity level</p>
+    <div className="glow-border h-full">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10 h-full"
+      >
+        <h2 className="text-2xl font-bold text-white mb-2">Alert Distribution</h2>
+        <p className="text-sm text-white/40 mb-8">By severity level</p>
         
-        <div className="flex items-center gap-8">
-          <div style={{ width: 180, height: 180 }}>
+        <div className="flex items-center gap-10">
+          <div style={{ width: 200, height: 200 }}>
             <ResponsiveContainer>
               <PieChart>
-                <Pie
-                  data={data}
-                  innerRadius={55}
-                  outerRadius={85}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
+                <Pie data={data} innerRadius={60} outerRadius={95} paddingAngle={3} dataKey="value">
                   {data.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -234,29 +220,33 @@ function AlertDistribution() {
             </ResponsiveContainer>
           </div>
           
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 space-y-4">
             {data.map((item) => (
-              <div key={item.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-white/[0.02] transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full" style={{ background: item.color, boxShadow: `0 0 10px ${item.color}50` }} />
-                  <span className="text-sm text-white/70 font-medium">{item.name}</span>
+              <motion.div 
+                key={item.name} 
+                whileHover={{ x: 4 }}
+                className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.02] transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-4 h-4 rounded-full" style={{ background: item.color, boxShadow: `0 0 12px ${item.color}60` }} />
+                  <span className="text-base text-white/70 font-medium">{item.name}</span>
                 </div>
-                <span className="text-lg font-bold text-white">{item.value}</span>
-              </div>
+                <span className="text-xl font-bold text-white">{item.value}</span>
+              </motion.div>
             ))}
           </div>
         </div>
 
-        <div className="flex gap-3 mt-8">
-          <button className="flex-1 px-4 py-3 text-sm font-semibold text-white/70 bg-white/[0.03] hover:bg-white/[0.06] rounded-xl transition-all border border-white/[0.04] flex items-center justify-center gap-2">
-            View All Alerts <ChevronRight size={16} />
+        <div className="flex gap-4 mt-10">
+          <button className="flex-1 px-5 py-4 text-sm font-semibold text-white/70 bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl transition-all border border-white/[0.04] flex items-center justify-center gap-2">
+            View All Alerts <ChevronRight size={18} />
           </button>
-          <button className="px-4 py-3 text-sm font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-xl transition-all border border-rose-500/20">
+          <button className="px-5 py-4 text-sm font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-2xl transition-all border border-rose-500/20">
             Ack Critical (3)
           </button>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -271,51 +261,48 @@ function InfrastructureOverview() {
     { icon: HardDrive, label: 'Storage', total: 89, healthy: 87, warning: 2, color: 'rose' },
   ];
 
-  const colorMap: Record<string, string> = {
-    violet: 'from-violet-500/20 to-purple-500/10 border-violet-500/20 text-violet-400',
-    blue: 'from-blue-500/20 to-indigo-500/10 border-blue-500/20 text-blue-400',
-    cyan: 'from-cyan-500/20 to-teal-500/10 border-cyan-500/20 text-cyan-400',
-    emerald: 'from-emerald-500/20 to-green-500/10 border-emerald-500/20 text-emerald-400',
-    amber: 'from-amber-500/20 to-orange-500/10 border-amber-500/20 text-amber-400',
-    rose: 'from-rose-500/20 to-pink-500/10 border-rose-500/20 text-rose-400',
-  };
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <div className="flex items-center justify-between mb-8">
+    <div className="glow-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10"
+      >
+        <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className="text-xl font-bold text-white">Infrastructure Overview</h2>
-            <p className="text-sm text-white/40 mt-1">3,881 total resources across all categories</p>
+            <h2 className="text-2xl font-bold text-white">Infrastructure Overview</h2>
+            <p className="text-sm text-white/40 mt-2">3,881 total resources across all categories</p>
           </div>
-          <button className="text-sm text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-1 px-4 py-2 bg-violet-500/10 rounded-xl border border-violet-500/20 transition-all hover:bg-violet-500/20">
-            View Topology <ChevronRight size={16} />
-          </button>
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            className="text-sm text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-2 px-5 py-3 bg-violet-500/10 rounded-2xl border border-violet-500/20 transition-all"
+          >
+            View Topology <ChevronRight size={18} />
+          </motion.button>
         </div>
 
-        <div className="grid grid-cols-3 lg:grid-cols-6 gap-5">
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-6">
           {infra.map((item) => (
-            <div key={item.label} className="text-center p-6 rounded-2xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer group">
-              <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${colorMap[item.color]} border flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <item.icon size={28} />
+            <motion.div 
+              key={item.label} 
+              whileHover={{ scale: 1.05, y: -4 }}
+              className="text-center p-8 rounded-3xl bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer"
+            >
+              <div className="flex justify-center mb-5">
+                <RaycastIcon icon={item.icon} size={36} color={item.color} containerSize={72} />
               </div>
-              <p className="text-3xl font-bold text-white">{item.total.toLocaleString()}</p>
+              <p className="text-4xl font-bold text-white">{item.total.toLocaleString()}</p>
               <p className="text-sm text-white/40 mt-2 font-medium">{item.label}</p>
-              <div className="flex justify-center gap-3 mt-3 text-xs font-semibold">
+              <div className="flex justify-center gap-3 mt-4 text-sm font-semibold">
                 <span className="text-emerald-400">{item.healthy}</span>
                 {item.warning && <span className="text-amber-400">{item.warning}</span>}
                 {item.critical && <span className="text-rose-400">{item.critical}</span>}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -328,168 +315,115 @@ function ServiceHealthMatrix() {
     { name: 'Message Queue', uptime: '99.97%', latency: '23ms', load: 45, status: 'healthy' },
     { name: 'Auth Service', uptime: '92.3%', latency: '2500ms', load: 98, status: 'critical' },
     { name: 'CDN', uptime: '99.99%', latency: '8ms', load: 23, status: 'healthy' },
-    { name: 'Search Engine', uptime: '99.95%', latency: '89ms', load: 56, status: 'healthy' },
-    { name: 'Analytics', uptime: '99.94%', latency: '234ms', load: 42, status: 'healthy' },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.25 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <h2 className="text-xl font-bold text-white mb-2">Service Health Matrix</h2>
-        <p className="text-sm text-white/40 mb-6">Real-time service status and performance</p>
+    <div className="glow-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10"
+      >
+        <h2 className="text-2xl font-bold text-white mb-2">Service Health</h2>
+        <p className="text-sm text-white/40 mb-8">Real-time status and performance</p>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           {services.map((service) => (
-            <div key={service.name} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/[0.04]">
-              <div className={`w-3 h-3 rounded-full ${
+            <motion.div 
+              key={service.name} 
+              whileHover={{ x: 4 }}
+              className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/[0.04] cursor-pointer"
+            >
+              <div className={`w-4 h-4 rounded-full ${
                 service.status === 'healthy' ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' :
                 service.status === 'warning' ? 'bg-amber-400 shadow-lg shadow-amber-400/50' : 
                 'bg-rose-400 shadow-lg shadow-rose-400/50 animate-pulse'
               }`} />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{service.name}</p>
-                <p className="text-xs text-white/40">Uptime: {service.uptime} • Response: {service.latency}</p>
+                <p className="text-base font-semibold text-white">{service.name}</p>
+                <p className="text-sm text-white/40 mt-0.5">Uptime: {service.uptime} • Response: {service.latency}</p>
               </div>
-              <div className="w-40">
-                <div className="h-2 bg-white/[0.04] rounded-full overflow-hidden">
-                  <div 
-                    className={`h-full rounded-full transition-all progress-glow ${
-                      service.load > 80 ? 'bg-rose-500' :
-                      service.load > 60 ? 'bg-amber-500' : 'bg-emerald-500'
+              <div className="w-48">
+                <div className="h-2.5 bg-white/[0.04] rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${service.load}%` }}
+                    transition={{ duration: 1, ease: 'easeOut' }}
+                    className={`h-full rounded-full ${
+                      service.load > 80 ? 'bg-rose-500 progress-glow' :
+                      service.load > 60 ? 'bg-amber-500 progress-glow' : 'bg-emerald-500 progress-glow'
                     }`}
-                    style={{ width: `${service.load}%` }}
+                    style={{ color: service.load > 80 ? '#ef4444' : service.load > 60 ? '#f59e0b' : '#10b981' }}
                   />
                 </div>
               </div>
-              <span className="text-sm font-bold text-white w-12 text-right">{service.load}%</span>
-            </div>
+              <span className="text-lg font-bold text-white w-14 text-right">{service.load}%</span>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-// Application Performance
-function ApplicationPerformance() {
-  const data = Array.from({ length: 24 }, (_, i) => ({
-    time: `${String(i).padStart(2, '0')}:00`,
-    requests: 1500 + Math.random() * 1000,
-    errors: Math.floor(Math.random() * 10),
-    latency: 80 + Math.random() * 60,
-  }));
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-white">Application Performance</h2>
-            <p className="text-sm text-white/40 mt-1">Request metrics over 24 hours</p>
-          </div>
-          <div className="flex items-center gap-6 text-xs font-medium">
-            <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-violet-400 shadow-lg shadow-violet-400/50" />Requests/min</span>
-            <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-rose-400 shadow-lg shadow-rose-400/50" />Errors</span>
-            <span className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-cyan-400 shadow-lg shadow-cyan-400/50" />Latency (ms)</span>
-          </div>
-        </div>
-
-        <div style={{ width: '100%', height: 240 }}>
-          <ResponsiveContainer>
-            <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 10 }} interval={3} />
-              <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 10 }} width={40} />
-              <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 10 }} width={40} />
-              <Tooltip contentStyle={{ background: 'rgba(0,0,0,0.9)', border: '1px solid rgba(139, 92, 246, 0.2)', borderRadius: '12px', fontSize: '11px' }} />
-              <Line yAxisId="left" type="monotone" dataKey="requests" stroke="#8b5cf6" strokeWidth={2.5} dot={false} />
-              <Line yAxisId="right" type="monotone" dataKey="latency" stroke="#06b6d4" strokeWidth={2.5} dot={false} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/[0.04]">
-          {[
-            { label: 'Request Rate', value: '1.9K/min', color: 'text-violet-400' },
-            { label: 'Errors (5min)', value: '0', color: 'text-emerald-400' },
-            { label: 'Avg Latency', value: '111ms', color: 'text-cyan-400' },
-            { label: 'Success Rate', value: '99.98%', color: 'text-emerald-400' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center p-4 rounded-xl bg-white/[0.02]">
-              <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-              <p className="text-xs text-white/40 mt-1 font-medium">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
 // Critical Events
 function CriticalEvents() {
   const events = [
-    { icon: XCircle, title: 'Auth Service Down', desc: 'Response time exceeding 2500ms threshold', time: '2 min ago', severity: 'critical', action: 'Investigate' },
-    { icon: AlertTriangle, title: 'Cache Layer Degradation', desc: 'Memory usage at 89%, approaching critical', time: '15 min ago', severity: 'warning', action: 'Review' },
-    { icon: CheckCircle, title: 'Database Backup Completed', desc: 'Daily backup successful, 124GB processed', time: '1 hour ago', severity: 'success' },
-    { icon: Info, title: 'SSL Certificate Renewal', desc: 'Certificate renewed successfully', time: '2 hours ago', severity: 'info' },
+    { icon: XCircle, title: 'Auth Service Down', desc: 'Response time exceeding 2500ms', time: '2 min ago', severity: 'critical', action: 'Investigate' },
+    { icon: AlertTriangle, title: 'Cache Layer Degradation', desc: 'Memory at 89%, approaching critical', time: '15 min ago', severity: 'warning', action: 'Review' },
+    { icon: CheckCircle, title: 'Database Backup Complete', desc: 'Daily backup successful, 124GB', time: '1 hour ago', severity: 'success' },
   ];
 
+  const severityColors: Record<string, { icon: string; bg: string }> = {
+    critical: { icon: 'text-rose-400', bg: 'icon-rose' },
+    warning: { icon: 'text-amber-400', bg: 'icon-amber' },
+    success: { icon: 'text-emerald-400', bg: 'icon-emerald' },
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.35 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <h2 className="text-xl font-bold text-white mb-2">Critical Events</h2>
-        <p className="text-sm text-white/40 mb-6">Recent system events and incidents</p>
+    <div className="glow-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10"
+      >
+        <h2 className="text-2xl font-bold text-white mb-2">Critical Events</h2>
+        <p className="text-sm text-white/40 mb-8">Recent incidents and alerts</p>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           {events.map((event, i) => (
-            <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/[0.04]">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                event.severity === 'critical' ? 'icon-glow-rose' :
-                event.severity === 'warning' ? 'icon-glow-amber' : 
-                event.severity === 'success' ? 'icon-glow-emerald' : 'icon-glow-cyan'
-              }`}>
-                <event.icon size={20} className={
-                  event.severity === 'critical' ? 'text-rose-400' :
-                  event.severity === 'warning' ? 'text-amber-400' : 
-                  event.severity === 'success' ? 'text-emerald-400' : 'text-cyan-400'
-                } />
+            <motion.div 
+              key={i} 
+              whileHover={{ x: 4 }}
+              className="flex items-start gap-5 p-5 rounded-2xl bg-white/[0.02] border border-white/[0.04]"
+            >
+              <div className={`icon-container ${severityColors[event.severity].bg}`} style={{ width: 52, height: 52 }}>
+                <event.icon size={24} className={severityColors[event.severity].icon} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{event.title}</p>
-                <p className="text-xs text-white/40 mt-1">{event.desc}</p>
-                <p className="text-xs text-white/30 mt-2 flex items-center gap-1">
-                  <Clock size={10} /> {event.time}
+                <p className="text-base font-semibold text-white">{event.title}</p>
+                <p className="text-sm text-white/40 mt-1">{event.desc}</p>
+                <p className="text-xs text-white/30 mt-2 flex items-center gap-1.5">
+                  <Clock size={12} /> {event.time}
                 </p>
               </div>
               {event.action && (
-                <button className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all ${
-                  event.severity === 'critical' 
-                    ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/20' 
-                    : 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20'
-                }`}>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+                    event.severity === 'critical' 
+                      ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/20' 
+                      : 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20'
+                  }`}
+                >
                   {event.action}
-                </button>
+                </motion.button>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -499,45 +433,44 @@ function RecentDeployments() {
     { name: 'API v2.3.1', env: 'Production • 3 instances', status: 'successful' },
     { name: 'Frontend v1.8.0', env: 'Staging • Rolling update', status: 'in-progress' },
     { name: 'Database Migration', env: 'Scheduled • 2:00 AM UTC', status: 'pending' },
-    { name: 'Auth Service v3.0', env: 'Production • Rollback', status: 'failed' },
   ];
 
   const statusStyles: Record<string, string> = {
     successful: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
     'in-progress': 'text-blue-400 bg-blue-500/10 border-blue-500/20',
     pending: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-    failed: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4 }}
-      className="glow-border"
-    >
-      <div className="glass-panel-elevated p-8 card-hover-glow">
-        <h2 className="text-xl font-bold text-white mb-2">Recent Deployments</h2>
-        <p className="text-sm text-white/40 mb-6">Latest deployment activities</p>
+    <div className="glow-border">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-card p-10"
+      >
+        <h2 className="text-2xl font-bold text-white mb-2">Recent Deployments</h2>
+        <p className="text-sm text-white/40 mb-8">Latest deployment activities</p>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           {deployments.map((dep, i) => (
-            <div key={i} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-white/[0.04]">
-              <div className="w-10 h-10 rounded-xl icon-glow flex items-center justify-center">
-                <GitBranch size={20} className="text-violet-400" />
-              </div>
+            <motion.div 
+              key={i} 
+              whileHover={{ x: 4 }}
+              className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-white/[0.04] cursor-pointer"
+            >
+              <RaycastIcon icon={GitBranch} size={24} color="violet" containerSize={52} />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{dep.name}</p>
-                <p className="text-xs text-white/40 mt-1">{dep.env}</p>
+                <p className="text-base font-semibold text-white">{dep.name}</p>
+                <p className="text-sm text-white/40 mt-1">{dep.env}</p>
               </div>
-              <span className={`px-3 py-1.5 text-xs font-semibold rounded-lg capitalize border ${statusStyles[dep.status]}`}>
+              <span className={`px-4 py-2 text-sm font-semibold rounded-xl capitalize border ${statusStyles[dep.status]}`}>
                 {dep.status.replace('-', ' ')}
               </span>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -554,58 +487,66 @@ export default function Dashboard() {
     <div className="min-h-screen">
       <div className="ambient-bg" />
       
-      {/* Header */}
+      {/* Floating Header */}
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-50 header-glass"
+        className="sticky top-0 z-50"
       >
-        <div className="max-w-[1600px] mx-auto px-8 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/30">
-              <Zap size={24} className="text-white" />
+        <div className="header-float">
+          <div className="px-8 py-5 flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <RaycastIcon icon={Zap} size={28} color="violet" containerSize={52} />
+              <div>
+                <h1 className="text-xl font-bold text-white tracking-tight">Obsidian</h1>
+                <p className="text-xs text-white/40">Enterprise Infrastructure</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Obsidian</h1>
-              <p className="text-xs text-white/40">Enterprise Infrastructure Monitor</p>
+            
+            <div className="flex items-center gap-4">
+              <div className="kpi-card px-5 py-3 flex items-center gap-3">
+                <div className="status-dot status-online" />
+                <span className="text-sm text-white/70 font-medium">All Systems Operational</span>
+              </div>
+              <div className="kpi-card px-4 py-3 text-sm text-white/50 font-mono">
+                {currentTime.toLocaleTimeString()}
+              </div>
+              <div className="kpi-card px-4 py-3 text-sm text-white/50">
+                <span className="text-white font-semibold">3,881</span> Resources
+              </div>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                className="icon-container"
+                style={{ width: 44, height: 44 }}
+              >
+                <Bell size={20} className="text-white/50" />
+              </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                className="icon-container"
+                style={{ width: 44, height: 44 }}
+              >
+                <Settings size={20} className="text-white/50" />
+              </motion.button>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <div className="kpi-card px-5 py-3 flex items-center gap-3">
-              <div className="status-dot status-online" />
-              <span className="text-sm text-white/70 font-medium">All Systems Operational</span>
-            </div>
-            <div className="kpi-card px-4 py-3 text-xs text-white/50 font-mono">
-              {currentTime.toLocaleTimeString()}
-            </div>
-            <div className="kpi-card px-4 py-3 text-xs text-white/50">
-              <span className="text-white font-semibold">3,881</span> Resources
-            </div>
-            <button className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/50 hover:text-white/80 hover:bg-white/[0.06] transition-all">
-              <Bell size={18} />
-            </button>
-            <button className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-white/50 hover:text-white/80 hover:bg-white/[0.06] transition-all">
-              <Settings size={18} />
-            </button>
           </div>
         </div>
       </motion.header>
 
-      {/* Main Content - Centered with padding */}
-      <main className="max-w-[1600px] mx-auto px-8 py-8 space-y-8">
+      {/* Main Content */}
+      <main className="max-w-[1600px] mx-auto px-8 py-10 space-y-10">
         {/* KPI Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" glowColor="violet" />
-          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" trend="stable" trendValue="stable" glowColor="emerald" />
-          <KPICard icon={AlertCircle} value="12" label="Critical Issues" trend="down" trendValue="-3" glowColor="rose" />
-          <KPICard icon={AlertTriangle} value="169" label="Active Alerts" glowColor="amber" />
-          <KPICard icon={CheckCircle} value="94%" label="Compliance" trend="up" trendValue="+2%" glowColor="cyan" />
-          <KPICard icon={TrendingDown} value="$127.8K" label="Monthly Cost" trend="down" trendValue="-8%" glowColor="blue" />
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" color="violet" />
+          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" trend="stable" trendValue="stable" color="emerald" />
+          <KPICard icon={AlertCircle} value="12" label="Critical Issues" trend="down" trendValue="-3" color="rose" />
+          <KPICard icon={AlertTriangle} value="169" label="Active Alerts" color="amber" />
+          <KPICard icon={CheckCircle} value="94%" label="Compliance" trend="up" trendValue="+2%" color="cyan" />
+          <KPICard icon={TrendingDown} value="$127.8K" label="Monthly Cost" trend="down" trendValue="-8%" color="blue" />
         </div>
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <PerformanceChart data={chartData} />
           </div>
@@ -615,17 +556,14 @@ export default function Dashboard() {
         {/* Infrastructure */}
         <InfrastructureOverview />
 
-        {/* Service Health & App Performance */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Service Health & Events */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <ServiceHealthMatrix />
-          <ApplicationPerformance />
+          <CriticalEvents />
         </div>
 
-        {/* Events & Deployments */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CriticalEvents />
-          <RecentDeployments />
-        </div>
+        {/* Deployments */}
+        <RecentDeployments />
       </main>
     </div>
   );
