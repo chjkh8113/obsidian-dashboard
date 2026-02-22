@@ -69,12 +69,12 @@ function KPICard({
         </div>
         <div className="min-w-0">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-semibold text-white whitespace-nowrap">{value}</span>
+            <span className="text-base font-semibold text-[#4a3530] whitespace-nowrap">{value}</span>
             {trend && trendValue && (
               <span className="text-[10px] text-[#d4a89a]/70">{trendValue}</span>
             )}
           </div>
-          <p className="text-[10px] text-white/50 truncate">{label}</p>
+          <p className="text-[10px] text-[#4a3530]/50 truncate">{label}</p>
         </div>
       </div>
     </div>
@@ -94,8 +94,8 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
       >
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-xs font-semibold text-white">Real-time Performance</h2>
-            <p className="text-[10px] text-white/40">Last 2 hours</p>
+            <h2 className="text-xs font-semibold text-[#4a3530]">Real-time Performance</h2>
+            <p className="text-[10px] text-[#4a3530]/40">Last 2 hours</p>
           </div>
           <div className="flex gap-1 p-1 bg-white/[0.03] rounded-lg border border-white/[0.04]">
             {(['cpu', 'memory', 'network', 'all'] as const).map((metric) => (
@@ -105,7 +105,7 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
                 className={`px-2 py-1 text-[10px] font-medium rounded transition-all ${
                   activeMetric === metric 
                     ? 'bg-[rgba(212,168,154,0.2)] text-[#d4a89a]' 
-                    : 'text-white/40 hover:text-white/60'
+                    : 'text-[#4a3530]/40 hover:text-[#4a3530]/60'
                 }`}
               >
                 {metric.toUpperCase()}
@@ -156,7 +156,7 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
           ].map((stat) => (
             <div key={stat.label} className="text-center p-2 rounded-lg bg-[rgba(212,168,154,0.08)]">
               <p className="text-sm font-semibold text-[#d4a89a]">{stat.value}</p>
-              <p className="text-[9px] text-white/40">{stat.label}</p>
+              <p className="text-[9px] text-[#4a3530]/40">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -182,8 +182,8 @@ function AlertDistribution() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-4 h-full"
       >
-        <h2 className="text-xs font-semibold text-white mb-1">Alert Distribution</h2>
-        <p className="text-[10px] text-white/40 mb-3">By severity</p>
+        <h2 className="text-xs font-semibold text-[#4a3530] mb-1">Alert Distribution</h2>
+        <p className="text-[10px] text-[#4a3530]/40 mb-3">By severity</p>
         
         <div className="flex items-center gap-4">
           <div style={{ width: 100, height: 100 }}>
@@ -206,16 +206,16 @@ function AlertDistribution() {
               >
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
-                  <span className="text-[10px] text-white/60">{item.name}</span>
+                  <span className="text-[10px] text-[#4a3530]/60">{item.name}</span>
                 </div>
-                <span className="text-[11px] font-semibold text-white">{item.value}</span>
+                <span className="text-[11px] font-semibold text-[#4a3530]">{item.value}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="flex gap-2 mt-3 pt-3 border-t border-white/[0.04]">
-          <button className="flex-1 px-2 py-1.5 text-[10px] font-medium text-white/60 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg transition-all">
+          <button className="flex-1 px-2 py-1.5 text-[10px] font-medium text-[#4a3530]/60 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg transition-all">
             View All
           </button>
           <button className="px-2 py-1.5 text-[10px] font-medium text-[#d4a89a] bg-[rgba(212,168,154,0.1)] hover:bg-[rgba(212,168,154,0.2)] rounded-lg transition-all">
@@ -247,8 +247,8 @@ function InfrastructureOverview() {
       >
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h2 className="text-xs font-semibold text-white">Infrastructure</h2>
-            <p className="text-[10px] text-white/40">3,881 resources</p>
+            <h2 className="text-xs font-semibold text-[#4a3530]">Infrastructure</h2>
+            <p className="text-[10px] text-[#4a3530]/40">3,881 resources</p>
           </div>
           <button className="text-[10px] text-[#d4a89a] font-medium flex items-center gap-1 px-2 py-1 bg-[rgba(212,168,154,0.1)] rounded-lg">
             Topology <ChevronRight size={10} />
@@ -264,8 +264,8 @@ function InfrastructureOverview() {
               <div className="flex justify-center mb-1">
                 <RaycastIcon icon={item.icon} size={14} containerSize={24} />
               </div>
-              <p className="text-sm font-semibold text-white">{item.total.toLocaleString()}</p>
-              <p className="text-[9px] text-white/40">{item.label}</p>
+              <p className="text-sm font-semibold text-[#4a3530]">{item.total.toLocaleString()}</p>
+              <p className="text-[9px] text-[#4a3530]/40">{item.label}</p>
               <div className="flex justify-center gap-1 mt-1 text-[8px] font-medium">
                 <span className="text-[#d4a89a]">{item.healthy}</span>
                 {item.warning && <span className="text-[#c49b8c]">·{item.warning}</span>}
@@ -297,8 +297,8 @@ function ServiceHealthMatrix() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-4"
       >
-        <h2 className="text-xs font-semibold text-white mb-1">Service Health</h2>
-        <p className="text-[10px] text-white/40 mb-3">Real-time status</p>
+        <h2 className="text-xs font-semibold text-[#4a3530] mb-1">Service Health</h2>
+        <p className="text-[10px] text-[#4a3530]/40 mb-3">Real-time status</p>
         
         <div className="space-y-1.5">
           {services.map((service) => (
@@ -310,8 +310,8 @@ function ServiceHealthMatrix() {
                 service.status === 'critical' ? 'animate-pulse opacity-60' : ''
               }`} />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium text-white truncate">{service.name}</p>
-                <p className="text-[9px] text-white/40">{service.uptime} · {service.latency}</p>
+                <p className="text-[11px] font-medium text-[#4a3530] truncate">{service.name}</p>
+                <p className="text-[9px] text-[#4a3530]/40">{service.uptime} · {service.latency}</p>
               </div>
               <div className="w-16">
                 <div className="h-1 bg-white/[0.04] rounded-full overflow-hidden">
@@ -321,7 +321,7 @@ function ServiceHealthMatrix() {
                   />
                 </div>
               </div>
-              <span className="text-[10px] font-semibold text-white/70 w-8 text-right">{service.load}%</span>
+              <span className="text-[10px] font-semibold text-[#4a3530]/70 w-8 text-right">{service.load}%</span>
             </div>
           ))}
         </div>
@@ -345,8 +345,8 @@ function CriticalEvents() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-4"
       >
-        <h2 className="text-xs font-semibold text-white mb-1">Critical Events</h2>
-        <p className="text-[10px] text-white/40 mb-3">Recent incidents</p>
+        <h2 className="text-xs font-semibold text-[#4a3530] mb-1">Critical Events</h2>
+        <p className="text-[10px] text-[#4a3530]/40 mb-3">Recent incidents</p>
         
         <div className="space-y-1.5">
           {events.map((event, i) => (
@@ -358,8 +358,8 @@ function CriticalEvents() {
                 <event.icon size={12} className="text-[#d4a89a]" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium text-white truncate">{event.title}</p>
-                <p className="text-[9px] text-white/40">{event.desc} · {event.time}</p>
+                <p className="text-[11px] font-medium text-[#4a3530] truncate">{event.title}</p>
+                <p className="text-[9px] text-[#4a3530]/40">{event.desc} · {event.time}</p>
               </div>
               {event.action && (
                 <button className="px-2 py-1 text-[9px] font-medium rounded bg-[rgba(212,168,154,0.1)] text-[#d4a89a]">
@@ -439,8 +439,8 @@ function RecentDeployments() {
         animate={{ opacity: 1, y: 0 }}
         className="glass-card p-4"
       >
-        <h2 className="text-xs font-semibold text-white mb-1">Deployments</h2>
-        <p className="text-[10px] text-white/40 mb-3">Recent activity</p>
+        <h2 className="text-xs font-semibold text-[#4a3530] mb-1">Deployments</h2>
+        <p className="text-[10px] text-[#4a3530]/40 mb-3">Recent activity</p>
         
         <div className="space-y-1.5">
           {deployments.map((dep, i) => (
@@ -450,8 +450,8 @@ function RecentDeployments() {
             >
               <RaycastIcon icon={GitBranch} size={12} containerSize={22} />
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-medium text-white">{dep.name}</p>
-                <p className="text-[9px] text-white/40">{dep.env}</p>
+                <p className="text-[11px] font-medium text-[#4a3530]">{dep.name}</p>
+                <p className="text-[9px] text-[#4a3530]/40">{dep.env}</p>
               </div>
               <span className={`px-2 py-0.5 text-[9px] font-medium rounded ${statusStyles[dep.status]}`}>
                 {dep.status === 'in-progress' ? 'Running' : dep.status === 'successful' ? 'Done' : 'Pending'}
@@ -494,27 +494,27 @@ export default function Dashboard() {
               <div className="flex items-center gap-2">
                 <RaycastIcon icon={Zap} size={14} containerSize={28} />
                 <div>
-                  <h1 className="text-xs font-semibold text-white">Obsidian</h1>
-                  <p className="text-[9px] text-white/40">Enterprise Monitor</p>
+                  <h1 className="text-xs font-semibold text-[#4a3530]">Obsidian</h1>
+                  <p className="text-[9px] text-[#4a3530]/40">Enterprise Monitor</p>
                 </div>
               </div>
               
               <div className="flex items-center gap-2">
                 <div className="kpi-card px-2 py-1 flex items-center gap-1.5">
                   <div className="status-dot status-online" style={{ width: 6, height: 6 }} />
-                  <span className="text-[10px] text-white/70">Operational</span>
+                  <span className="text-[10px] text-[#4a3530]/70">Operational</span>
                 </div>
-                <div className="kpi-card px-2 py-1 text-[10px] text-white/50 font-mono">
+                <div className="kpi-card px-2 py-1 text-[10px] text-[#4a3530]/50 font-mono">
                   {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                 </div>
-                <div className="kpi-card px-2 py-1 text-[10px] text-white/50">
-                  <span className="text-white font-medium">3,881</span>
+                <div className="kpi-card px-2 py-1 text-[10px] text-[#4a3530]/50">
+                  <span className="text-[#4a3530] font-medium">3,881</span>
                 </div>
                 <button className="icon-container" style={{ width: 24, height: 24 }}>
-                  <Bell size={12} className="text-white/50" />
+                  <Bell size={12} className="text-[#4a3530]/50" />
                 </button>
                 <button className="icon-container" style={{ width: 24, height: 24 }}>
-                  <Settings size={12} className="text-white/50" />
+                  <Settings size={12} className="text-[#4a3530]/50" />
                 </button>
               </div>
             </div>

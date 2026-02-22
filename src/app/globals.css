@@ -37,7 +37,7 @@ p, span, button { font-size: 0.7rem; }
 .text-sm { font-size: 0.65rem !important; }
 .text-xs { font-size: 0.6rem !important; }
 
-/* Dusk Background with Image - Less blur */
+/* Dusk Background with Image - Light */
 .ambient-bg {
   position: fixed;
   inset: 0;
@@ -50,52 +50,52 @@ p, span, button { font-size: 0.7rem; }
   inset: -10px;
   background: 
     url('/bg-dusk.jpg') center center / cover no-repeat;
-  filter: blur(4px);
+  filter: blur(4px) brightness(1.1);
   transform: scale(1.02);
 }
 
-/* Subtle overlay for better text contrast */
+/* Very subtle overlay */
 .ambient-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(26, 18, 21, 0.15);
+  background: rgba(26, 18, 21, 0.05);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Floating Header - Compact */
+/* Floating Header - Light */
 .header-float {
-  background: rgba(45, 31, 34, 0.75);
+  background: rgba(255, 245, 240, 0.25);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(212, 168, 154, 0.08);
+  border: 1px solid rgba(212, 168, 154, 0.15);
   border-radius: 8px;
   margin: 8px 12px;
 }
 
-/* Glass Card - With shadow */
+/* Glass Card - Light */
 .glass-card {
   position: relative;
-  background: rgba(45, 31, 34, 0.65);
+  background: rgba(255, 245, 240, 0.35);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-radius: 8px;
-  border: 1px solid rgba(212, 168, 154, 0.1);
+  border: 1px solid rgba(212, 168, 154, 0.2);
   transition: all 0.2s ease;
   box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .glass-card:hover {
-  background: rgba(45, 31, 34, 0.75);
-  border-color: rgba(212, 168, 154, 0.18);
+  background: rgba(255, 245, 240, 0.45);
+  border-color: rgba(212, 168, 154, 0.3);
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    0 4px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 /* Subtle Border - Dusk tones */
@@ -130,7 +130,7 @@ p, span, button { font-size: 0.7rem; }
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(26, 18, 21, 0.95);
+  background: rgba(255, 248, 245, 0.15);
   border-radius: 8px;
   z-index: -1;
 }
@@ -164,7 +164,7 @@ p, span, button { font-size: 0.7rem; }
   box-shadow: 0 0 20px rgba(212, 168, 154, 0.1);
 }
 
-/* Single tone icons - Dusk palette */
+/* Single tone icons - Light dusk palette */
 .icon-dusk,
 .icon-violet,
 .icon-emerald,
@@ -172,9 +172,9 @@ p, span, button { font-size: 0.7rem; }
 .icon-rose,
 .icon-cyan,
 .icon-blue {
-  background: rgba(212, 168, 154, 0.08);
-  border-color: rgba(212, 168, 154, 0.12);
-  color: #d4a89a;
+  background: rgba(212, 168, 154, 0.15);
+  border-color: rgba(212, 168, 154, 0.2);
+  color: #a07060;
 }
 
 .icon-dusk:hover,
@@ -184,9 +184,9 @@ p, span, button { font-size: 0.7rem; }
 .icon-rose:hover,
 .icon-cyan:hover,
 .icon-blue:hover {
-  background: rgba(212, 168, 154, 0.15);
-  border-color: rgba(212, 168, 154, 0.25);
-  box-shadow: 0 0 20px rgba(212, 168, 154, 0.15);
+  background: rgba(212, 168, 154, 0.25);
+  border-color: rgba(212, 168, 154, 0.35);
+  box-shadow: 0 0 15px rgba(212, 168, 154, 0.2);
 }
 
 /* Override ALL colors to single tone dusty rose palette */
@@ -240,25 +240,25 @@ p, span, button { font-size: 0.7rem; }
   box-shadow: 0 0 10px rgba(212, 168, 154, 0.6), 0 0 20px rgba(212, 168, 154, 0.4) !important;
 }
 
-/* KPI Card - With shadow */
+/* KPI Card - Light */
 .kpi-card {
-  background: rgba(45, 31, 34, 0.55);
+  background: rgba(255, 245, 240, 0.3);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border: 1px solid rgba(212, 168, 154, 0.08);
+  border: 1px solid rgba(212, 168, 154, 0.15);
   border-radius: 8px;
   transition: all 0.2s ease;
   box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.12),
-    0 1px 3px rgba(0, 0, 0, 0.08);
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .kpi-card:hover {
-  background: rgba(45, 31, 34, 0.7);
-  border-color: rgba(212, 168, 154, 0.15);
+  background: rgba(255, 245, 240, 0.4);
+  border-color: rgba(212, 168, 154, 0.25);
   box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.18),
-    0 2px 4px rgba(0, 0, 0, 0.12);
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 /* Status Dot */
@@ -337,17 +337,17 @@ p, span, button { font-size: 0.7rem; }
   pointer-events: none;
 }
 
-/* Sidebar - Compact */
+/* Sidebar - Light */
 .sidebar-glass {
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
   width: 140px;
-  background: rgba(45, 31, 34, 0.7);
+  background: rgba(255, 245, 240, 0.35);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-right: 1px solid rgba(212, 168, 154, 0.08);
+  border-right: 1px solid rgba(212, 168, 154, 0.15);
   display: flex;
   flex-direction: column;
   z-index: 100;
@@ -360,7 +360,7 @@ p, span, button { font-size: 0.7rem; }
   gap: 8px;
   padding: 8px 12px;
   border-radius: 6px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(80, 50, 45, 0.6);
   font-size: 11px;
   font-weight: 500;
   transition: all 0.15s ease;
@@ -372,19 +372,19 @@ p, span, button { font-size: 0.7rem; }
 }
 
 .sidebar-item:hover {
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.04);
+  color: rgba(80, 50, 45, 0.9);
+  background: rgba(212, 168, 154, 0.15);
 }
 
 .sidebar-item-active {
-  color: #d4a89a;
-  background: rgba(212, 168, 154, 0.12);
-  border-color: rgba(212, 168, 154, 0.15);
+  color: #6b4540;
+  background: rgba(212, 168, 154, 0.25);
+  border-color: rgba(212, 168, 154, 0.3);
 }
 
 .sidebar-item-active:hover {
-  color: #d4a89a;
-  background: rgba(212, 168, 154, 0.15);
+  color: #6b4540;
+  background: rgba(212, 168, 154, 0.3);
 }
 
 /* Adjust main content for sidebar */
