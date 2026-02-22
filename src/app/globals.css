@@ -61,58 +61,34 @@ body {
   50% { opacity: 0.8; transform: scale(1.1); }
 }
 
-/* Floating Header with Corners */
+/* Floating Header - Clean glass layer */
 .header-float {
-  background: rgba(12, 12, 18, 0.7);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 20px;
+  background: rgba(10, 10, 15, 0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
   margin: 16px 24px;
-  box-shadow: 
-    0 4px 30px rgba(0, 0, 0, 0.3),
-    0 0 60px rgba(120, 50, 180, 0.05);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
 }
 
-/* Glass Panel with Animated Glow */
+/* Glass Card - Layered glass, subtle default, reveal on hover */
 .glass-card {
   position: relative;
-  background: rgba(15, 15, 22, 0.6);
+  background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(20px);
   border-radius: 24px;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 100% 100% at 50% 0%,
-    rgba(120, 50, 180, 0.08),
-    transparent 60%
-  );
-  animation: card-glow 6s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes card-glow {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.3s ease;
 }
 
 .glass-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 20px 60px rgba(120, 50, 180, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
 }
 
-.glass-card:hover::before {
-  opacity: 1;
-  animation-play-state: paused;
-}
-
-/* Slow Rotating Border */
+/* Slow Rotating Border - Subtle glow */
 .glow-border {
   position: relative;
   border-radius: 24px;
@@ -125,27 +101,26 @@ body {
   background: conic-gradient(
     from var(--border-angle, 0deg),
     transparent 0%,
-    rgba(140, 80, 200, 0.4) 5%,
-    rgba(100, 60, 180, 0.6) 10%,
-    rgba(140, 80, 200, 0.4) 15%,
-    transparent 20%,
-    transparent 80%,
-    rgba(140, 80, 200, 0.4) 85%,
-    rgba(100, 60, 180, 0.6) 90%,
-    rgba(140, 80, 200, 0.4) 95%,
+    rgba(140, 80, 200, 0.2) 8%,
+    rgba(120, 60, 180, 0.35) 12%,
+    rgba(140, 80, 200, 0.2) 16%,
+    transparent 25%,
+    transparent 75%,
+    rgba(140, 80, 200, 0.2) 84%,
+    rgba(120, 60, 180, 0.35) 88%,
+    rgba(140, 80, 200, 0.2) 92%,
     transparent 100%
   );
   border-radius: 25px;
-  animation: rotate-border 25s linear infinite;
+  animation: rotate-border 30s linear infinite;
   z-index: -1;
-  filter: blur(1px);
 }
 
 .glow-border::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(8, 8, 14, 0.95);
+  background: rgba(6, 6, 10, 0.97);
   border-radius: 24px;
   z-index: -1;
 }
@@ -161,128 +136,97 @@ body {
   to { --border-angle: 360deg; }
 }
 
-/* Raycast-style Icon Container */
+/* Raycast-style Icon Container - Minimal Default, Glass on Hover */
 .icon-container {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.08),
-    rgba(255, 255, 255, 0.02)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  transition: all 0.25s ease;
 }
 
 .icon-container:hover {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.04)
-  );
+  background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.12);
-  transform: scale(1.05);
-  box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.15),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    0 0 40px rgba(140, 80, 200, 0.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
 }
 
-/* Colored Icon Containers */
+/* Colored Icon Containers - Subtle default, reveal on hover */
 .icon-violet {
-  background: linear-gradient(145deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));
-  border-color: rgba(139, 92, 246, 0.2);
-  box-shadow: inset 0 1px 1px rgba(139, 92, 246, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(139, 92, 246, 0.04);
+  border-color: rgba(139, 92, 246, 0.1);
 }
 .icon-violet:hover {
-  box-shadow: inset 0 1px 1px rgba(139, 92, 246, 0.3), 0 8px 24px rgba(139, 92, 246, 0.2);
+  background: rgba(139, 92, 246, 0.12);
+  border-color: rgba(139, 92, 246, 0.25);
+  box-shadow: 0 0 24px rgba(139, 92, 246, 0.15);
 }
 
 .icon-emerald {
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
-  border-color: rgba(16, 185, 129, 0.2);
-  box-shadow: inset 0 1px 1px rgba(16, 185, 129, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(16, 185, 129, 0.04);
+  border-color: rgba(16, 185, 129, 0.1);
 }
 .icon-emerald:hover {
-  box-shadow: inset 0 1px 1px rgba(16, 185, 129, 0.3), 0 8px 24px rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.15);
 }
 
 .icon-amber {
-  background: linear-gradient(145deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
-  border-color: rgba(245, 158, 11, 0.2);
-  box-shadow: inset 0 1px 1px rgba(245, 158, 11, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(245, 158, 11, 0.04);
+  border-color: rgba(245, 158, 11, 0.1);
 }
 .icon-amber:hover {
-  box-shadow: inset 0 1px 1px rgba(245, 158, 11, 0.3), 0 8px 24px rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.25);
+  box-shadow: 0 0 24px rgba(245, 158, 11, 0.15);
 }
 
 .icon-rose {
-  background: linear-gradient(145deg, rgba(244, 63, 94, 0.2), rgba(244, 63, 94, 0.05));
-  border-color: rgba(244, 63, 94, 0.2);
-  box-shadow: inset 0 1px 1px rgba(244, 63, 94, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(244, 63, 94, 0.04);
+  border-color: rgba(244, 63, 94, 0.1);
 }
 .icon-rose:hover {
-  box-shadow: inset 0 1px 1px rgba(244, 63, 94, 0.3), 0 8px 24px rgba(244, 63, 94, 0.2);
+  background: rgba(244, 63, 94, 0.12);
+  border-color: rgba(244, 63, 94, 0.25);
+  box-shadow: 0 0 24px rgba(244, 63, 94, 0.15);
 }
 
 .icon-cyan {
-  background: linear-gradient(145deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.05));
-  border-color: rgba(6, 182, 212, 0.2);
-  box-shadow: inset 0 1px 1px rgba(6, 182, 212, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(6, 182, 212, 0.04);
+  border-color: rgba(6, 182, 212, 0.1);
 }
 .icon-cyan:hover {
-  box-shadow: inset 0 1px 1px rgba(6, 182, 212, 0.3), 0 8px 24px rgba(6, 182, 212, 0.2);
+  background: rgba(6, 182, 212, 0.12);
+  border-color: rgba(6, 182, 212, 0.25);
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.15);
 }
 
 .icon-blue {
-  background: linear-gradient(145deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
-  border-color: rgba(59, 130, 246, 0.2);
-  box-shadow: inset 0 1px 1px rgba(59, 130, 246, 0.2), 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: rgba(59, 130, 246, 0.04);
+  border-color: rgba(59, 130, 246, 0.1);
 }
 .icon-blue:hover {
-  box-shadow: inset 0 1px 1px rgba(59, 130, 246, 0.3), 0 8px 24px rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.15);
 }
 
-/* KPI Card */
+/* KPI Card - Minimal default, glass reveal on hover */
 .kpi-card {
-  background: rgba(15, 15, 22, 0.5);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 20px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.kpi-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: radial-gradient(ellipse at top, rgba(140, 80, 200, 0.06), transparent 70%);
-  animation: kpi-glow 5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes kpi-glow {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.8; }
+  border-radius: 16px;
+  transition: all 0.25s ease;
 }
 
 .kpi-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(140, 80, 200, 0.2);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(140, 80, 200, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* Status Dot */
