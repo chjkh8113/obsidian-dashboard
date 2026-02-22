@@ -241,12 +241,12 @@ function AlertDistribution() {
 // Infrastructure Overview
 function InfrastructureOverview() {
   const infra = [
-    { icon: Server, label: 'Servers', total: 847, healthy: 823, warning: 21, critical: 3, color: 'violet' },
-    { icon: Database, label: 'Databases', total: 124, healthy: 122, warning: 2, color: 'blue' },
-    { icon: Box, label: 'Containers', total: 2341, healthy: 2298, warning: 38, critical: 5, color: 'cyan' },
-    { icon: Cloud, label: 'VMs', total: 456, healthy: 449, warning: 6, critical: 1, color: 'emerald' },
-    { icon: Layers, label: 'Load Balancers', total: 24, healthy: 24, color: 'amber' },
-    { icon: HardDrive, label: 'Storage', total: 89, healthy: 87, warning: 2, color: 'rose' },
+    { icon: Server, label: 'Servers', total: 847, healthy: 823, warning: 21, critical: 3 },
+    { icon: Database, label: 'Databases', total: 124, healthy: 122, warning: 2 },
+    { icon: Box, label: 'Containers', total: 2341, healthy: 2298, warning: 38, critical: 5 },
+    { icon: Cloud, label: 'VMs', total: 456, healthy: 449, warning: 6, critical: 1 },
+    { icon: Layers, label: 'Load Balancers', total: 24, healthy: 24 },
+    { icon: HardDrive, label: 'Storage', total: 89, healthy: 87, warning: 2 },
   ];
 
   return (
@@ -277,7 +277,7 @@ function InfrastructureOverview() {
               className="text-center p-8 rounded-3xl bg-white/[0.02] border border-white/[0.04] hover:border-white/[0.08] transition-all cursor-pointer"
             >
               <div className="flex justify-center mb-5">
-                <RaycastIcon icon={item.icon} size={36} color={item.color} containerSize={72} />
+                <RaycastIcon icon={item.icon} size={30} containerSize={60} />
               </div>
               <p className="text-4xl font-bold text-white">{item.total.toLocaleString()}</p>
               <p className="text-sm text-white/40 mt-2 font-medium">{item.label}</p>
