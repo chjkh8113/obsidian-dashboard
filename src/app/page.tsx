@@ -6,7 +6,8 @@ import {
   Activity, Cpu, HardDrive, Network, Server, Database, Box, Cloud,
   AlertTriangle, CheckCircle, XCircle, Clock, TrendingUp, TrendingDown,
   Zap, Shield, Layers, GitBranch, AlertCircle, Info, ChevronRight, 
-  Settings, Bell
+  Settings, Bell, LayoutDashboard, BarChart3, Globe, Wifi, FileJson,
+  Table2, DollarSign, Package, Users, Home
 } from 'lucide-react';
 import { 
   AreaChart, Area, ResponsiveContainer, XAxis, YAxis, 
@@ -427,6 +428,54 @@ function CriticalEvents() {
   );
 }
 
+// Sidebar
+function Sidebar({ activeItem, setActiveItem }: { activeItem: string; setActiveItem: (item: string) => void }) {
+  const menuItems = [
+    { icon: Home, label: 'Overview', id: 'overview' },
+    { icon: LayoutDashboard, label: 'Dashboard', id: 'dashboard' },
+    { icon: Server, label: 'Infrastructure', id: 'infrastructure' },
+    { icon: Globe, label: 'Network', id: 'network' },
+    { icon: Wifi, label: 'SNMP Monitor', id: 'snmp' },
+    { icon: FileJson, label: 'API Sources', id: 'api' },
+    { icon: Table2, label: 'Data Import', id: 'import' },
+    { icon: DollarSign, label: 'Finance', id: 'finance' },
+    { icon: Package, label: 'Inventory', id: 'inventory' },
+    { icon: BarChart3, label: 'Analytics', id: 'analytics' },
+  ];
+
+  return (
+    <motion.aside
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className="sidebar-glass"
+    >
+      <nav className="flex flex-col gap-1 p-3">
+        {menuItems.map((item) => (
+          <motion.button
+            key={item.id}
+            onClick={() => setActiveItem(item.id)}
+            whileHover={{ x: 4 }}
+            className={`sidebar-item ${activeItem === item.id ? 'sidebar-item-active' : ''}`}
+          >
+            <item.icon size={20} />
+            <span>{item.label}</span>
+          </motion.button>
+        ))}
+      </nav>
+      
+      <div className="mt-auto p-3 border-t border-white/[0.06]">
+        <motion.button
+          whileHover={{ x: 4 }}
+          className="sidebar-item w-full"
+        >
+          <Settings size={20} />
+          <span>Settings</span>
+        </motion.button>
+      </div>
+    </motion.aside>
+  );
+}
+
 // Recent Deployments
 function RecentDeployments() {
   const deployments = [
@@ -477,6 +526,7 @@ function RecentDeployments() {
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [chartData] = useState(generateTimeSeriesData);
+  const [activeItem, setActiveItem] = useState('dashboard');
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -484,57 +534,62 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex">
       <div className="ambient-bg" />
       
-      {/* Floating Header */}
-      <motion.header 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-50"
-      >
-        <div className="header-float">
-          <div className="px-8 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-5">
-              <RaycastIcon icon={Zap} size={28} color="violet" containerSize={52} />
-              <div>
-                <h1 className="text-xl font-bold text-white tracking-tight">Obsidian</h1>
-                <p className="text-xs text-white/40">Enterprise Infrastructure</p>
+      {/* Sidebar */}
+      <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} />
+      
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Floating Header */}
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="sticky top-0 z-50"
+        >
+          <div className="header-float">
+            <div className="px-8 py-5 flex items-center justify-between">
+              <div className="flex items-center gap-5">
+                <RaycastIcon icon={Zap} size={28} color="violet" containerSize={52} />
+                <div>
+                  <h1 className="text-xl font-bold text-white tracking-tight">Obsidian</h1>
+                  <p className="text-xs text-white/40">Enterprise Infrastructure</p>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="kpi-card px-5 py-3 flex items-center gap-3">
-                <div className="status-dot status-online" />
-                <span className="text-sm text-white/70 font-medium">All Systems Operational</span>
+              
+              <div className="flex items-center gap-4">
+                <div className="kpi-card px-5 py-3 flex items-center gap-3">
+                  <div className="status-dot status-online" />
+                  <span className="text-sm text-white/70 font-medium">All Systems Operational</span>
+                </div>
+                <div className="kpi-card px-4 py-3 text-sm text-white/50 font-mono">
+                  {currentTime.toLocaleTimeString()}
+                </div>
+                <div className="kpi-card px-4 py-3 text-sm text-white/50">
+                  <span className="text-white font-semibold">3,881</span> Resources
+                </div>
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  className="icon-container"
+                  style={{ width: 44, height: 44 }}
+                >
+                  <Bell size={20} className="text-white/50" />
+                </motion.button>
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  className="icon-container"
+                  style={{ width: 44, height: 44 }}
+                >
+                  <Settings size={20} className="text-white/50" />
+                </motion.button>
               </div>
-              <div className="kpi-card px-4 py-3 text-sm text-white/50 font-mono">
-                {currentTime.toLocaleTimeString()}
-              </div>
-              <div className="kpi-card px-4 py-3 text-sm text-white/50">
-                <span className="text-white font-semibold">3,881</span> Resources
-              </div>
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                className="icon-container"
-                style={{ width: 44, height: 44 }}
-              >
-                <Bell size={20} className="text-white/50" />
-              </motion.button>
-              <motion.button 
-                whileHover={{ scale: 1.1 }}
-                className="icon-container"
-                style={{ width: 44, height: 44 }}
-              >
-                <Settings size={20} className="text-white/50" />
-              </motion.button>
             </div>
           </div>
-        </div>
-      </motion.header>
+        </motion.header>
 
-      {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-8 py-10 space-y-10">
+        {/* Main Content */}
+        <main className="max-w-[1600px] mx-auto px-8 py-10 space-y-10 w-full">
         {/* KPI Row */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
           <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" color="violet" />
@@ -565,6 +620,7 @@ export default function Dashboard() {
         {/* Deployments */}
         <RecentDeployments />
       </main>
+      </div>
     </div>
   );
 }
