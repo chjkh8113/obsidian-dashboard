@@ -37,7 +37,7 @@ p, span, button { font-size: 0.7rem; }
 .text-sm { font-size: 0.65rem !important; }
 .text-xs { font-size: 0.6rem !important; }
 
-/* Dusk Background with Image - Blurred */
+/* Dusk Background with Image - Less blur */
 .ambient-bg {
   position: fixed;
   inset: 0;
@@ -47,11 +47,11 @@ p, span, button { font-size: 0.7rem; }
 .ambient-bg::after {
   content: '';
   position: absolute;
-  inset: -20px; /* Extend beyond edges to prevent blur artifacts */
+  inset: -10px;
   background: 
     url('/bg-dusk.jpg') center center / cover no-repeat;
-  filter: blur(12px);
-  transform: scale(1.05); /* Prevent edge artifacts */
+  filter: blur(4px);
+  transform: scale(1.02);
 }
 
 /* Subtle overlay for better text contrast */
@@ -59,7 +59,7 @@ p, span, button { font-size: 0.7rem; }
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(26, 18, 21, 0.2);
+  background: rgba(26, 18, 21, 0.15);
   pointer-events: none;
   z-index: 1;
 }
@@ -80,7 +80,7 @@ p, span, button { font-size: 0.7rem; }
   background: rgba(45, 31, 34, 0.65);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid rgba(212, 168, 154, 0.1);
   transition: all 0.2s ease;
   box-shadow: 
@@ -101,7 +101,7 @@ p, span, button { font-size: 0.7rem; }
 /* Subtle Border - Dusk tones */
 .glow-border {
   position: relative;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .glow-border::before {
@@ -121,7 +121,7 @@ p, span, button { font-size: 0.7rem; }
     rgba(212, 168, 154, 0.15) 90%,
     transparent 100%
   );
-  border-radius: 13px;
+  border-radius: 9px;
   animation: rotate-border 40s linear infinite;
   z-index: -1;
 }
@@ -131,7 +131,7 @@ p, span, button { font-size: 0.7rem; }
   position: absolute;
   inset: 0;
   background: rgba(26, 18, 21, 0.95);
-  border-radius: 12px;
+  border-radius: 8px;
   z-index: -1;
 }
 
