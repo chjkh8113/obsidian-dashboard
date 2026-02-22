@@ -27,30 +27,19 @@ const generateTimeSeriesData = (points = 30) => {
   });
 };
 
-// Raycast-style Icon
+// Raycast-style Icon - Single tone
 function RaycastIcon({ 
   icon: Icon, 
   size = 32, 
-  color = 'violet',
   containerSize = 64 
 }: { 
   icon: React.ElementType; 
   size?: number; 
-  color?: string;
   containerSize?: number;
 }) {
-  const colorClasses: Record<string, string> = {
-    violet: 'icon-violet text-violet-400',
-    emerald: 'icon-emerald text-emerald-400',
-    amber: 'icon-amber text-amber-400',
-    rose: 'icon-rose text-rose-400',
-    cyan: 'icon-cyan text-cyan-400',
-    blue: 'icon-blue text-blue-400',
-  };
-
   return (
     <div 
-      className={`icon-container ${colorClasses[color]}`}
+      className="icon-container icon-dusk"
       style={{ width: containerSize, height: containerSize }}
     >
       <Icon size={size} />
@@ -64,25 +53,23 @@ function KPICard({
   value, 
   label, 
   trend, 
-  trendValue,
-  color = 'violet'
+  trendValue
 }: {
   icon: React.ElementType;
   value: string | number;
   label: string;
   trend?: 'up' | 'down' | 'stable';
   trendValue?: string;
-  color?: string;
 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
-      className="kpi-card p-6"
+      className="kpi-card p-4"
     >
-      <div className="flex items-center gap-5">
-        <RaycastIcon icon={Icon} size={28} color={color} containerSize={56} />
+      <div className="flex items-center gap-4">
+        <RaycastIcon icon={Icon} size={22} containerSize={44} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
             <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
@@ -507,7 +494,7 @@ function RecentDeployments() {
               whileHover={{ x: 4 }}
               className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-white/[0.04] cursor-pointer"
             >
-              <RaycastIcon icon={GitBranch} size={24} color="violet" containerSize={52} />
+              <RaycastIcon icon={GitBranch} size={24}  containerSize={52} />
               <div className="flex-1 min-w-0">
                 <p className="text-base font-semibold text-white">{dep.name}</p>
                 <p className="text-sm text-white/40 mt-1">{dep.env}</p>
@@ -551,7 +538,7 @@ export default function Dashboard() {
           <div className="header-float">
             <div className="px-8 py-5 flex items-center justify-between">
               <div className="flex items-center gap-5">
-                <RaycastIcon icon={Zap} size={28} color="violet" containerSize={52} />
+                <RaycastIcon icon={Zap} size={28}  containerSize={52} />
                 <div>
                   <h1 className="text-xl font-bold text-white tracking-tight">Obsidian</h1>
                   <p className="text-xs text-white/40">Enterprise Infrastructure</p>
@@ -592,12 +579,12 @@ export default function Dashboard() {
         <main className="max-w-[1600px] mx-auto px-8 py-10 space-y-10 w-full">
         {/* KPI Row */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" color="violet" />
-          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" trend="stable" trendValue="stable" color="emerald" />
-          <KPICard icon={AlertCircle} value="12" label="Critical Issues" trend="down" trendValue="-3" color="rose" />
-          <KPICard icon={AlertTriangle} value="169" label="Active Alerts" color="amber" />
-          <KPICard icon={CheckCircle} value="94%" label="Compliance" trend="up" trendValue="+2%" color="cyan" />
-          <KPICard icon={TrendingDown} value="$127.8K" label="Monthly Cost" trend="down" trendValue="-8%" color="blue" />
+          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%"  />
+          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" trend="stable" trendValue="stable"  />
+          <KPICard icon={AlertCircle} value="12" label="Critical Issues" trend="down" trendValue="-3"  />
+          <KPICard icon={AlertTriangle} value="169" label="Active Alerts"  />
+          <KPICard icon={CheckCircle} value="94%" label="Compliance" trend="up" trendValue="+2%"  />
+          <KPICard icon={TrendingDown} value="$127.8K" label="Monthly Cost" trend="down" trendValue="-8%"  />
         </div>
 
         {/* Charts Row */}
