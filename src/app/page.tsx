@@ -129,44 +129,44 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
             <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.5} />
-                  <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#d4a89a" stopOpacity={0.6} />
+                  <stop offset="100%" stopColor="#d4a89a" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.5} />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#c49b8c" stopOpacity={0.5} />
+                  <stop offset="100%" stopColor="#c49b8c" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorNetwork" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.5} />
-                  <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
+                  <stop offset="0%" stopColor="#b08979" stopOpacity={0.5} />
+                  <stop offset="100%" stopColor="#b08979" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.2)', fontSize: 12 }} />
               <YAxis axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.2)', fontSize: 12 }} width={50} />
               <Tooltip contentStyle={{ background: 'rgba(0,0,0,0.9)', border: '1px solid rgba(140,80,200,0.3)', borderRadius: '16px', fontSize: '13px' }} />
               {(activeMetric === 'cpu' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="cpu" stroke="#8b5cf6" strokeWidth={3} fill="url(#colorCpu)" />
+                <Area type="monotone" dataKey="cpu" stroke="#d4a89a" strokeWidth={2} fill="url(#colorCpu)" />
               )}
               {(activeMetric === 'memory' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="memory" stroke="#10b981" strokeWidth={3} fill="url(#colorMemory)" />
+                <Area type="monotone" dataKey="memory" stroke="#c49b8c" strokeWidth={2} fill="url(#colorMemory)" />
               )}
               {(activeMetric === 'network' || activeMetric === 'all') && (
-                <Area type="monotone" dataKey="network" stroke="#06b6d4" strokeWidth={3} fill="url(#colorNetwork)" />
+                <Area type="monotone" dataKey="network" stroke="#b08979" strokeWidth={2} fill="url(#colorNetwork)" />
               )}
             </AreaChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="grid grid-cols-4 gap-6 mt-10 pt-8 border-t border-white/[0.04]">
+        <div className="grid grid-cols-4 gap-4 mt-8 pt-6 border-t border-white/[0.04]">
           {[
-            { label: 'CPU Usage', value: '44%', color: 'bg-violet-500/15 text-violet-400' },
-            { label: 'Memory', value: '59%', color: 'bg-emerald-500/15 text-emerald-400' },
-            { label: 'Network I/O', value: '259 Mbps', color: 'bg-cyan-500/15 text-cyan-400' },
-            { label: 'Disk Usage', value: '78%', color: 'bg-amber-500/15 text-amber-400' },
+            { label: 'CPU Usage', value: '44%' },
+            { label: 'Memory', value: '59%' },
+            { label: 'Network I/O', value: '259 Mbps' },
+            { label: 'Disk Usage', value: '78%' },
           ].map((stat) => (
-            <div key={stat.label} className={`text-center p-5 rounded-2xl ${stat.color.split(' ')[0]}`}>
-              <p className={`text-4xl font-bold ${stat.color.split(' ')[1]}`}>{stat.value}</p>
-              <p className="text-sm text-white/40 mt-2 font-medium">{stat.label}</p>
+            <div key={stat.label} className="text-center p-4 rounded-2xl bg-[rgba(212,168,154,0.1)]">
+              <p className="text-2xl font-bold text-[#d4a89a]">{stat.value}</p>
+              <p className="text-xs text-white/40 mt-1 font-medium">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -178,11 +178,11 @@ function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeries
 // Alert Distribution
 function AlertDistribution() {
   const data = [
-    { name: 'Critical', value: 3, color: '#ef4444' },
-    { name: 'High', value: 8, color: '#f97316' },
-    { name: 'Medium', value: 24, color: '#eab308' },
-    { name: 'Low', value: 45, color: '#22c55e' },
-    { name: 'Info', value: 89, color: '#3b82f6' },
+    { name: 'Critical', value: 3, color: '#8b7b8a' },
+    { name: 'High', value: 8, color: '#a08979' },
+    { name: 'Medium', value: 24, color: '#b49a8c' },
+    { name: 'Low', value: 45, color: '#c9ab9e' },
+    { name: 'Info', value: 89, color: '#d4a89a' },
   ];
 
   return (
@@ -225,11 +225,11 @@ function AlertDistribution() {
           </div>
         </div>
 
-        <div className="flex gap-4 mt-10">
-          <button className="flex-1 px-5 py-4 text-sm font-semibold text-white/70 bg-white/[0.03] hover:bg-white/[0.06] rounded-2xl transition-all border border-white/[0.04] flex items-center justify-center gap-2">
-            View All Alerts <ChevronRight size={18} />
+        <div className="flex gap-3 mt-8">
+          <button className="flex-1 px-4 py-3 text-xs font-semibold text-white/70 bg-white/[0.03] hover:bg-white/[0.06] rounded-xl transition-all border border-white/[0.04] flex items-center justify-center gap-2">
+            View All Alerts <ChevronRight size={14} />
           </button>
-          <button className="px-5 py-4 text-sm font-semibold text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-2xl transition-all border border-rose-500/20">
+          <button className="px-4 py-3 text-xs font-semibold text-[#d4a89a] bg-[rgba(212,168,154,0.1)] hover:bg-[rgba(212,168,154,0.2)] rounded-xl transition-all border border-[rgba(212,168,154,0.2)]">
             Ack Critical (3)
           </button>
         </div>
@@ -263,9 +263,9 @@ function InfrastructureOverview() {
           </div>
           <motion.button 
             whileHover={{ scale: 1.05 }}
-            className="text-sm text-violet-400 hover:text-violet-300 font-semibold flex items-center gap-2 px-5 py-3 bg-violet-500/10 rounded-2xl border border-violet-500/20 transition-all"
+            className="text-xs text-[#d4a89a] hover:text-[#e8c4b8] font-semibold flex items-center gap-2 px-4 py-2 bg-[rgba(212,168,154,0.1)] rounded-xl border border-[rgba(212,168,154,0.2)] transition-all"
           >
-            View Topology <ChevronRight size={18} />
+            View Topology <ChevronRight size={14} />
           </motion.button>
         </div>
 
@@ -281,10 +281,10 @@ function InfrastructureOverview() {
               </div>
               <p className="text-4xl font-bold text-white">{item.total.toLocaleString()}</p>
               <p className="text-sm text-white/40 mt-2 font-medium">{item.label}</p>
-              <div className="flex justify-center gap-3 mt-4 text-sm font-semibold">
-                <span className="text-emerald-400">{item.healthy}</span>
-                {item.warning && <span className="text-amber-400">{item.warning}</span>}
-                {item.critical && <span className="text-rose-400">{item.critical}</span>}
+              <div className="flex justify-center gap-2 mt-3 text-xs font-semibold">
+                <span className="text-[#d4a89a]">{item.healthy}</span>
+                {item.warning && <span className="text-[#c49b8c]">{item.warning}</span>}
+                {item.critical && <span className="text-[#b08979]">{item.critical}</span>}
               </div>
             </motion.div>
           ))}
@@ -322,11 +322,9 @@ function ServiceHealthMatrix() {
               whileHover={{ x: 4 }}
               className="flex items-center gap-5 p-5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.04] transition-all border border-transparent hover:border-white/[0.04] cursor-pointer"
             >
-              <div className={`w-4 h-4 rounded-full ${
-                service.status === 'healthy' ? 'bg-emerald-400 shadow-lg shadow-emerald-400/50' :
-                service.status === 'warning' ? 'bg-amber-400 shadow-lg shadow-amber-400/50' : 
-                'bg-rose-400 shadow-lg shadow-rose-400/50 animate-pulse'
-              }`} />
+              <div className={`w-3 h-3 rounded-full bg-[#d4a89a] ${
+                service.status === 'critical' ? 'animate-pulse opacity-60' : 'opacity-100'
+              }`} style={{ boxShadow: '0 0 8px rgba(212, 168, 154, 0.5)' }} />
               <div className="flex-1 min-w-0">
                 <p className="text-base font-semibold text-white">{service.name}</p>
                 <p className="text-sm text-white/40 mt-0.5">Uptime: {service.uptime} • Response: {service.latency}</p>
@@ -337,11 +335,8 @@ function ServiceHealthMatrix() {
                     initial={{ width: 0 }}
                     animate={{ width: `${service.load}%` }}
                     transition={{ duration: 1, ease: 'easeOut' }}
-                    className={`h-full rounded-full ${
-                      service.load > 80 ? 'bg-rose-500 progress-glow' :
-                      service.load > 60 ? 'bg-amber-500 progress-glow' : 'bg-emerald-500 progress-glow'
-                    }`}
-                    style={{ color: service.load > 80 ? '#ef4444' : service.load > 60 ? '#f59e0b' : '#10b981' }}
+                    className="h-full rounded-full bg-[#d4a89a]"
+                    style={{ boxShadow: '0 0 8px rgba(212, 168, 154, 0.5)' }}
                   />
                 </div>
               </div>
@@ -363,9 +358,9 @@ function CriticalEvents() {
   ];
 
   const severityColors: Record<string, { icon: string; bg: string }> = {
-    critical: { icon: 'text-rose-400', bg: 'icon-rose' },
-    warning: { icon: 'text-amber-400', bg: 'icon-amber' },
-    success: { icon: 'text-emerald-400', bg: 'icon-emerald' },
+    critical: { icon: 'text-[#d4a89a]', bg: 'icon-dusk' },
+    warning: { icon: 'text-[#d4a89a]', bg: 'icon-dusk' },
+    success: { icon: 'text-[#d4a89a]', bg: 'icon-dusk' },
   };
 
   return (
@@ -398,11 +393,7 @@ function CriticalEvents() {
               {event.action && (
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
-                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all ${
-                    event.severity === 'critical' 
-                      ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/20' 
-                      : 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/20'
-                  }`}
+                  className="px-4 py-2 text-xs font-semibold rounded-xl transition-all bg-[rgba(212,168,154,0.1)] text-[#d4a89a] hover:bg-[rgba(212,168,154,0.2)] border border-[rgba(212,168,154,0.2)]"
                 >
                   {event.action}
                 </motion.button>
@@ -472,9 +463,9 @@ function RecentDeployments() {
   ];
 
   const statusStyles: Record<string, string> = {
-    successful: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-    'in-progress': 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-    pending: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+    successful: 'text-[#d4a89a] bg-[rgba(212,168,154,0.1)] border-[rgba(212,168,154,0.2)]',
+    'in-progress': 'text-[#c49b8c] bg-[rgba(196,155,140,0.1)] border-[rgba(196,155,140,0.2)]',
+    pending: 'text-[#b08979] bg-[rgba(176,137,121,0.1)] border-[rgba(176,137,121,0.2)]',
   };
 
   return (

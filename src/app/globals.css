@@ -191,7 +191,7 @@ p, span, button { font-size: 0.8rem; }
   box-shadow: 0 0 20px rgba(212, 168, 154, 0.15);
 }
 
-/* Override all icon text colors to single tone */
+/* Override ALL colors to single tone dusty rose palette */
 .icon-violet svg,
 .icon-emerald svg,
 .icon-amber svg,
@@ -199,12 +199,47 @@ p, span, button { font-size: 0.8rem; }
 .icon-cyan svg,
 .icon-blue svg,
 .text-violet-400,
+.text-violet-300,
 .text-emerald-400,
 .text-amber-400,
 .text-rose-400,
 .text-cyan-400,
 .text-blue-400 {
   color: #d4a89a !important;
+}
+
+/* Status colors - all dusty rose */
+.bg-emerald-400, .bg-emerald-500 { background-color: #d4a89a !important; }
+.bg-amber-400, .bg-amber-500 { background-color: #c49b8c !important; }
+.bg-rose-400, .bg-rose-500 { background-color: #b08979 !important; }
+.bg-violet-500 { background-color: #d4a89a !important; }
+.bg-cyan-500 { background-color: #d4a89a !important; }
+.bg-blue-500 { background-color: #d4a89a !important; }
+
+/* Background tints - all dusty rose variations */
+.bg-violet-500\/20, .bg-violet-500\/15, .bg-violet-500\/10 { background-color: rgba(212, 168, 154, 0.15) !important; }
+.bg-emerald-500\/20, .bg-emerald-500\/15, .bg-emerald-500\/10 { background-color: rgba(212, 168, 154, 0.12) !important; }
+.bg-amber-500\/20, .bg-amber-500\/15, .bg-amber-500\/10 { background-color: rgba(196, 155, 140, 0.15) !important; }
+.bg-rose-500\/20, .bg-rose-500\/15, .bg-rose-500\/10 { background-color: rgba(176, 137, 121, 0.15) !important; }
+.bg-cyan-500\/15, .bg-cyan-500\/10 { background-color: rgba(212, 168, 154, 0.12) !important; }
+.bg-blue-500\/15, .bg-blue-500\/10 { background-color: rgba(212, 168, 154, 0.12) !important; }
+
+/* Border colors - all dusty rose */
+.border-violet-500\/20 { border-color: rgba(212, 168, 154, 0.2) !important; }
+.border-emerald-500\/20 { border-color: rgba(212, 168, 154, 0.2) !important; }
+.border-amber-500\/20 { border-color: rgba(196, 155, 140, 0.2) !important; }
+.border-rose-500\/20 { border-color: rgba(176, 137, 121, 0.2) !important; }
+.border-blue-500\/20 { border-color: rgba(212, 168, 154, 0.2) !important; }
+
+/* Shadow colors */
+.shadow-violet-500\/20 { --tw-shadow-color: rgba(212, 168, 154, 0.2) !important; }
+.shadow-emerald-400\/50 { box-shadow: 0 0 8px rgba(212, 168, 154, 0.5) !important; }
+.shadow-amber-400\/50 { box-shadow: 0 0 8px rgba(196, 155, 140, 0.5) !important; }
+.shadow-rose-400\/50 { box-shadow: 0 0 8px rgba(176, 137, 121, 0.5) !important; }
+
+/* Progress bar glow - single tone */
+.progress-glow {
+  box-shadow: 0 0 10px rgba(212, 168, 154, 0.6), 0 0 20px rgba(212, 168, 154, 0.4) !important;
 }
 
 /* KPI Card - Warm glass */
@@ -251,9 +286,9 @@ p, span, button { font-size: 0.8rem; }
   50% { transform: scale(1.1); opacity: 0.8; }
 }
 
-.status-online { background: #10b981; }
-.status-warning { background: #f59e0b; }
-.status-offline { background: #ef4444; }
+.status-online { background: #d4a89a; }
+.status-warning { background: #c49b8c; }
+.status-offline { background: #b08979; }
 
 /* Progress Bar Glow */
 .progress-glow {
