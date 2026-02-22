@@ -47,7 +47,7 @@ function RaycastIcon({
   );
 }
 
-// KPI Card - Compact
+// KPI Card - Fixed
 function KPICard({ 
   icon: Icon, 
   value, 
@@ -62,26 +62,22 @@ function KPICard({
   trendValue?: string;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="kpi-card px-3 py-2"
-    >
-      <div className="flex items-center gap-2">
-        <RaycastIcon icon={Icon} size={14} containerSize={28} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-white">{value}</span>
+    <div className="kpi-card p-3">
+      <div className="flex items-center gap-3">
+        <div className="icon-container icon-dusk flex-shrink-0" style={{ width: 32, height: 32 }}>
+          <Icon size={16} className="text-[#d4a89a]" />
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-baseline gap-2">
+            <span className="text-base font-semibold text-white whitespace-nowrap">{value}</span>
             {trend && trendValue && (
-              <span className="text-[10px] font-medium text-[#d4a89a] opacity-70">
-                {trendValue}
-              </span>
+              <span className="text-[10px] text-[#d4a89a]/70">{trendValue}</span>
             )}
           </div>
-          <p className="text-[10px] text-white/40">{label}</p>
+          <p className="text-[10px] text-white/50 truncate">{label}</p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -528,13 +524,13 @@ export default function Dashboard() {
         {/* Main Content - Compact */}
         <main className="max-w-[1400px] mx-auto px-4 py-4 space-y-4 w-full">
         {/* KPI Row */}
-        <div className="grid grid-cols-6 gap-2">
-          <KPICard icon={Server} value="3,458" label="Assets" trend="up" trendValue="+5.2%" />
-          <KPICard icon={Shield} value="99.98%" label="Uptime" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" />
+          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" />
           <KPICard icon={AlertCircle} value="12" label="Critical" trend="down" trendValue="-3" />
           <KPICard icon={AlertTriangle} value="169" label="Alerts" />
           <KPICard icon={CheckCircle} value="94%" label="Compliance" />
-          <KPICard icon={TrendingDown} value="$127.8K" label="Cost" trend="down" trendValue="-8%" />
+          <KPICard icon={TrendingDown} value="$127K" label="Monthly Cost" trend="down" trendValue="-8%" />
         </div>
 
         {/* Charts Row */}
