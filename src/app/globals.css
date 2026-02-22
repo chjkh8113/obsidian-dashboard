@@ -22,14 +22,21 @@ body {
   overflow-x: hidden;
 }
 
-/* Dusk Background with Image */
+/* Dusk Background with Image - Blurred */
 .ambient-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
+}
+
+.ambient-bg::after {
+  content: '';
+  position: absolute;
+  inset: -20px; /* Extend beyond edges to prevent blur artifacts */
   background: 
-    url('/bg-dusk.jpg') center center / cover no-repeat fixed,
-    linear-gradient(135deg, #1a1215 0%, #2d1f22 100%);
+    url('/bg-dusk.jpg') center center / cover no-repeat;
+  filter: blur(12px);
+  transform: scale(1.05); /* Prevent edge artifacts */
 }
 
 /* Subtle overlay for better text contrast */
@@ -37,8 +44,9 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(26, 18, 21, 0.25);
+  background: rgba(26, 18, 21, 0.2);
   pointer-events: none;
+  z-index: 1;
 }
 
 /* Floating Header - Warm glass */
