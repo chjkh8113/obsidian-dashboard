@@ -1,283 +1,537 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
-  Activity, Cpu, HardDrive, Network, Server, 
-  AlertTriangle, CheckCircle, XCircle, Clock,
-  ArrowUpRight, ArrowDownRight, Zap, Database,
-  Globe, Shield, Terminal, Command
+  Activity, Cpu, HardDrive, Network, Server, Database, Box, Cloud,
+  AlertTriangle, CheckCircle, XCircle, Clock, TrendingUp, TrendingDown,
+  ArrowUpRight, ArrowDownRight, Zap, Shield, Terminal, Globe, Layers,
+  GitBranch, Play, Pause, AlertCircle, Info, ChevronRight
 } from 'lucide-react';
-import { AreaChart, Area, ResponsiveContainer, Tooltip } from 'recharts';
+import { 
+  AreaChart, Area, ResponsiveContainer, XAxis, YAxis, 
+  PieChart, Pie, Cell, LineChart, Line, Tooltip
+} from 'recharts';
 
-// Mock data generator
-const generateSparklineData = (points = 20, trend: 'up' | 'down' | 'stable' = 'stable') => {
-  let value = 50;
+// Generate mock time-series data
+const generateTimeSeriesData = (points = 24) => {
+  const now = new Date();
   return Array.from({ length: points }, (_, i) => {
-    if (trend === 'up') value += Math.random() * 5 - 1;
-    else if (trend === 'down') value -= Math.random() * 5 - 1;
-    else value += Math.random() * 10 - 5;
-    value = Math.max(10, Math.min(90, value));
-    return { time: i, value };
+    const time = new Date(now.getTime() - (points - i - 1) * 5 * 60 * 1000);
+    return {
+      time: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      cpu: 30 + Math.random() * 40,
+      memory: 50 + Math.random() * 30,
+      network: 100 + Math.random() * 200,
+    };
   });
 };
 
-// Metric Card Component
-function MetricCard({ 
-  label, 
-  value, 
-  unit, 
-  status, 
+// KPI Card Component
+function KPICard({ 
   icon: Icon, 
-  sparklineData,
-  trend,
-  shortcut 
+  value, 
+  label, 
+  trend, 
+  trendValue,
+  color = 'emerald'
 }: {
-  label: string;
-  value: string | number;
-  unit?: string;
-  status: 'success' | 'warning' | 'danger';
   icon: React.ElementType;
-  sparklineData?: { time: number; value: number }[];
-  trend?: { value: number; direction: 'up' | 'down' };
-  shortcut?: string;
+  value: string | number;
+  label: string;
+  trend?: 'up' | 'down' | 'stable';
+  trendValue?: string;
+  color?: 'emerald' | 'amber' | 'rose' | 'blue' | 'violet' | 'cyan';
 }) {
-  const statusColors = {
-    success: 'var(--color-success)',
-    warning: 'var(--color-warning)',
-    danger: 'var(--color-danger)'
+  const colors = {
+    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+    amber: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+    rose: { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/20' },
+    blue: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
+    violet: { bg: 'bg-violet-500/10', text: 'text-violet-400', border: 'border-violet-500/20' },
+    cyan: { bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/20' },
   };
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`glass-panel p-5 relative group cursor-pointer transition-all duration-300 hover:bg-[var(--color-glass-hover)] ${
-        status === 'danger' ? 'metric-glow-danger' : 
-        status === 'warning' ? 'metric-glow-warning' : ''
-      }`}
+      className="glass-panel p-4 flex items-center gap-4"
     >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div 
-            className="w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{ 
-              background: `linear-gradient(135deg, ${statusColors[status]}22, ${statusColors[status]}11)`,
-              border: `1px solid ${statusColors[status]}33`
-            }}
-          >
-            <Icon size={18} style={{ color: statusColors[status] }} />
-          </div>
-          <span className="text-sm text-white/50 font-medium">{label}</span>
-        </div>
-        {shortcut && <kbd className="kbd opacity-0 group-hover:opacity-100 transition-opacity">{shortcut}</kbd>}
+      <div className={`w-12 h-12 rounded-xl ${colors[color].bg} border ${colors[color].border} flex items-center justify-center`}>
+        <Icon size={22} className={colors[color].text} />
       </div>
-
-      {/* Value */}
-      <div className="flex items-baseline gap-2 mb-3">
-        <span className="text-3xl font-semibold tracking-tight text-white">{value}</span>
-        {unit && <span className="text-sm text-white/40">{unit}</span>}
-        {trend && (
-          <div className={`flex items-center gap-1 text-xs font-medium ${
-            trend.direction === 'up' ? 'text-emerald-400' : 'text-rose-400'
-          }`}>
-            {trend.direction === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-            {trend.value}%
-          </div>
-        )}
-      </div>
-
-      {/* Sparkline */}
-      {sparklineData && (
-        <div style={{ width: '100%', height: 48, marginLeft: -4, marginRight: -4 }}>
-          <ResponsiveContainer width="100%" height={48}>
-            <AreaChart data={sparklineData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id={`gradient-${label.replace(/\s/g, '')}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={statusColors[status]} stopOpacity={0.4} />
-                  <stop offset="100%" stopColor={statusColors[status]} stopOpacity={0.05} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke={statusColors[status]}
-                strokeWidth={2}
-                fill={`url(#gradient-${label.replace(/\s/g, '')})`}
-                isAnimationActive={false}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl font-bold text-white">{value}</span>
+          {trend && trendValue && (
+            <span className={`text-xs font-medium flex items-center gap-0.5 ${
+              trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-rose-400' : 'text-white/40'
+            }`}>
+              {trend === 'up' ? <TrendingUp size={12} /> : trend === 'down' ? <TrendingDown size={12} /> : null}
+              {trendValue}
+            </span>
+          )}
         </div>
-      )}
-
-      {/* Status indicator */}
-      <div className="absolute top-5 right-5">
-        <div className={`status-dot status-${status === 'success' ? 'online' : status === 'warning' ? 'warning' : 'offline'}`} />
+        <p className="text-sm text-white/50 truncate">{label}</p>
       </div>
     </motion.div>
   );
 }
 
-// Service Status Item
-function ServiceItem({ 
-  name, 
-  status, 
-  latency, 
-  icon: Icon 
-}: { 
-  name: string; 
-  status: 'healthy' | 'degraded' | 'down';
-  latency?: number;
-  icon: React.ElementType;
-}) {
+// Large Chart Panel
+function PerformanceChart({ data }: { data: ReturnType<typeof generateTimeSeriesData> }) {
+  const [activeMetric, setActiveMetric] = useState<'cpu' | 'memory' | 'network' | 'all'>('all');
+  
   return (
     <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="flex items-center justify-between py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors cursor-pointer group"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+      className="glass-panel-elevated p-6"
     >
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.06] flex items-center justify-center">
-          <Icon size={16} className="text-white/50" />
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-white">Real-time Performance</h2>
+        <div className="flex gap-1 p-1 bg-white/[0.03] rounded-lg">
+          {(['cpu', 'memory', 'network', 'all'] as const).map((metric) => (
+            <button
+              key={metric}
+              onClick={() => setActiveMetric(metric)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                activeMetric === metric 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/40 hover:text-white/60'
+              }`}
+            >
+              {metric.toUpperCase()}
+            </button>
+          ))}
         </div>
-        <span className="text-sm font-medium text-white/80">{name}</span>
       </div>
-      <div className="flex items-center gap-4">
-        {latency && (
-          <span className="text-xs text-white/40 font-mono">{latency}ms</span>
-        )}
-        <div className={`flex items-center gap-2 text-xs font-medium ${
-          status === 'healthy' ? 'text-emerald-400' :
-          status === 'degraded' ? 'text-amber-400' : 'text-rose-400'
-        }`}>
-          {status === 'healthy' ? <CheckCircle size={14} /> :
-           status === 'degraded' ? <AlertTriangle size={14} /> : <XCircle size={14} />}
-          <span className="capitalize">{status}</span>
-        </div>
+      
+      <div style={{ width: '100%', height: 280 }}>
+        <ResponsiveContainer>
+          <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorMemory" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="colorNetwork" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#06b6d4" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#06b6d4" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis 
+              dataKey="time" 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }}
+              interval="preserveStartEnd"
+            />
+            <YAxis 
+              axisLine={false} 
+              tickLine={false} 
+              tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 11 }}
+              width={40}
+            />
+            <Tooltip
+              contentStyle={{
+                background: 'rgba(0,0,0,0.8)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                fontSize: '12px'
+              }}
+            />
+            {(activeMetric === 'cpu' || activeMetric === 'all') && (
+              <Area type="monotone" dataKey="cpu" stroke="#8b5cf6" strokeWidth={2} fill="url(#colorCpu)" />
+            )}
+            {(activeMetric === 'memory' || activeMetric === 'all') && (
+              <Area type="monotone" dataKey="memory" stroke="#10b981" strokeWidth={2} fill="url(#colorMemory)" />
+            )}
+            {(activeMetric === 'network' || activeMetric === 'all') && (
+              <Area type="monotone" dataKey="network" stroke="#06b6d4" strokeWidth={2} fill="url(#colorNetwork)" />
+            )}
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/[0.06]">
+        {[
+          { label: 'CPU Usage', value: '44%', color: 'text-violet-400' },
+          { label: 'Memory', value: '59%', color: 'text-emerald-400' },
+          { label: 'Network', value: '259 Mbps', color: 'text-cyan-400' },
+          { label: 'Disk I/O', value: '78%', color: 'text-amber-400' },
+        ].map((stat) => (
+          <div key={stat.label} className="text-center">
+            <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+            <p className="text-xs text-white/40 mt-1">{stat.label}</p>
+          </div>
+        ))}
       </div>
     </motion.div>
   );
 }
 
-// Alert Item
-function AlertItem({ 
-  title, 
-  time, 
-  severity 
-}: { 
-  title: string; 
-  time: string;
-  severity: 'critical' | 'warning' | 'info';
-}) {
-  const colors = {
-    critical: 'text-rose-400 bg-rose-400/10 border-rose-400/20',
-    warning: 'text-amber-400 bg-amber-400/10 border-amber-400/20',
-    info: 'text-blue-400 bg-blue-400/10 border-blue-400/20'
+// Alert Distribution Donut
+function AlertDistribution() {
+  const data = [
+    { name: 'Critical', value: 3, color: '#ef4444' },
+    { name: 'High', value: 8, color: '#f97316' },
+    { name: 'Medium', value: 24, color: '#eab308' },
+    { name: 'Low', value: 45, color: '#22c55e' },
+    { name: 'Info', value: 89, color: '#3b82f6' },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.15 }}
+      className="glass-panel-elevated p-6"
+    >
+      <h2 className="text-lg font-semibold text-white mb-4">Alert Distribution</h2>
+      
+      <div className="flex items-center gap-6">
+        <div style={{ width: 140, height: 140 }}>
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie
+                data={data}
+                innerRadius={45}
+                outerRadius={65}
+                paddingAngle={2}
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        
+        <div className="flex-1 space-y-2">
+          {data.map((item) => (
+            <div key={item.name} className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                <span className="text-sm text-white/70">{item.name}</span>
+              </div>
+              <span className="text-sm font-medium text-white">{item.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex gap-2 mt-6">
+        <button className="flex-1 px-3 py-2 text-xs font-medium text-white/70 bg-white/[0.03] hover:bg-white/[0.06] rounded-lg transition-colors flex items-center justify-center gap-1">
+          View All <ChevronRight size={14} />
+        </button>
+        <button className="px-3 py-2 text-xs font-medium text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 rounded-lg transition-colors">
+          Ack Critical (3)
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+
+// Infrastructure Overview
+function InfrastructureOverview() {
+  const infra = [
+    { icon: Server, label: 'Servers', total: 847, healthy: 823, warning: 21, critical: 3 },
+    { icon: Database, label: 'Databases', total: 124, healthy: 122, warning: 2 },
+    { icon: Box, label: 'Containers', total: 2341, healthy: 2298, warning: 38, critical: 5 },
+    { icon: Cloud, label: 'VMs', total: 456, healthy: 449, warning: 6, critical: 1 },
+    { icon: Layers, label: 'Load Balancers', total: 24, healthy: 24 },
+    { icon: HardDrive, label: 'Storage', total: 89, healthy: 87, warning: 2 },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="glass-panel-elevated p-6"
+    >
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-semibold text-white">Infrastructure Overview</h2>
+        <button className="text-xs text-violet-400 hover:text-violet-300 font-medium flex items-center gap-1">
+          View Topology <ChevronRight size={14} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-4">
+        {infra.map((item) => (
+          <div key={item.label} className="text-center p-4 rounded-xl bg-white/[0.02] border border-white/[0.04] hover:bg-white/[0.04] transition-colors cursor-pointer">
+            <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-br from-violet-500/20 to-purple-500/10 border border-violet-500/20 flex items-center justify-center">
+              <item.icon size={22} className="text-violet-400" />
+            </div>
+            <p className="text-2xl font-bold text-white">{item.total.toLocaleString()}</p>
+            <p className="text-xs text-white/50 mt-1">{item.label}</p>
+            <div className="flex justify-center gap-2 mt-2 text-[10px]">
+              <span className="text-emerald-400">{item.healthy}</span>
+              {item.warning && <span className="text-amber-400">{item.warning}</span>}
+              {item.critical && <span className="text-rose-400">{item.critical}</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// Service Health Matrix
+function ServiceHealthMatrix() {
+  const services = [
+    { name: 'API Gateway', uptime: '99.99%', latency: '45ms', load: 34, status: 'healthy' },
+    { name: 'Database Cluster', uptime: '99.98%', latency: '12ms', load: 67, status: 'healthy' },
+    { name: 'Cache Layer', uptime: '98.5%', latency: '156ms', load: 89, status: 'warning' },
+    { name: 'Message Queue', uptime: '99.97%', latency: '23ms', load: 45, status: 'healthy' },
+    { name: 'Auth Service', uptime: '92.3%', latency: '2500ms', load: 98, status: 'critical' },
+    { name: 'CDN', uptime: '99.99%', latency: '8ms', load: 23, status: 'healthy' },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.25 }}
+      className="glass-panel-elevated p-6"
+    >
+      <h2 className="text-lg font-semibold text-white mb-4">Service Health Matrix</h2>
+      
+      <div className="space-y-3">
+        {services.map((service) => (
+          <div key={service.name} className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
+            <div className={`w-2 h-2 rounded-full ${
+              service.status === 'healthy' ? 'bg-emerald-400' :
+              service.status === 'warning' ? 'bg-amber-400' : 'bg-rose-400'
+            }`} />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white">{service.name}</p>
+              <p className="text-xs text-white/40">Uptime: {service.uptime} • Response: {service.latency}</p>
+            </div>
+            <div className="w-32">
+              <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                <div 
+                  className={`h-full rounded-full transition-all ${
+                    service.load > 80 ? 'bg-rose-500' :
+                    service.load > 60 ? 'bg-amber-500' : 'bg-emerald-500'
+                  }`}
+                  style={{ width: `${service.load}%` }}
+                />
+              </div>
+            </div>
+            <span className="text-xs text-white/50 w-8 text-right">{service.load}%</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// Critical Events
+function CriticalEvents() {
+  const events = [
+    { 
+      icon: XCircle, 
+      title: 'Auth Service Down', 
+      desc: 'Response time exceeding 2500ms threshold',
+      time: '2 min ago',
+      severity: 'critical',
+      action: 'Investigate'
+    },
+    { 
+      icon: AlertTriangle, 
+      title: 'Cache Layer Degradation', 
+      desc: 'Memory usage at 89%, approaching critical',
+      time: '15 min ago',
+      severity: 'warning',
+      action: 'Review'
+    },
+    { 
+      icon: CheckCircle, 
+      title: 'Database Backup Completed', 
+      desc: 'Daily backup successful, 124GB processed',
+      time: '1 hour ago',
+      severity: 'success'
+    },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      className="glass-panel-elevated p-6"
+    >
+      <h2 className="text-lg font-semibold text-white mb-4">Critical Events</h2>
+      
+      <div className="space-y-3">
+        {events.map((event, i) => (
+          <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02]">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+              event.severity === 'critical' ? 'bg-rose-500/10' :
+              event.severity === 'warning' ? 'bg-amber-500/10' : 'bg-emerald-500/10'
+            }`}>
+              <event.icon size={16} className={
+                event.severity === 'critical' ? 'text-rose-400' :
+                event.severity === 'warning' ? 'text-amber-400' : 'text-emerald-400'
+              } />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white">{event.title}</p>
+              <p className="text-xs text-white/40 mt-0.5">{event.desc}</p>
+              <p className="text-xs text-white/30 mt-1 flex items-center gap-1">
+                <Clock size={10} /> {event.time}
+              </p>
+            </div>
+            {event.action && (
+              <button className={`px-3 py-1.5 text-xs font-medium rounded-lg ${
+                event.severity === 'critical' 
+                  ? 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20' 
+                  : 'bg-amber-500/10 text-amber-400 hover:bg-amber-500/20'
+              } transition-colors`}>
+                {event.action}
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// Recent Deployments
+function RecentDeployments() {
+  const deployments = [
+    { name: 'API v2.3.1', env: 'Production • 3 instances', status: 'successful', icon: CheckCircle },
+    { name: 'Frontend v1.8.0', env: 'Staging • Rolling update', status: 'in-progress', icon: Play },
+    { name: 'Database Migration', env: 'Scheduled • 2:00 AM UTC', status: 'pending', icon: Clock },
+  ];
+
+  const statusStyles = {
+    successful: 'text-emerald-400 bg-emerald-500/10',
+    'in-progress': 'text-blue-400 bg-blue-500/10',
+    pending: 'text-amber-400 bg-amber-500/10',
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-start gap-3 py-3 px-4 rounded-xl hover:bg-white/[0.02] transition-colors cursor-pointer"
+      transition={{ delay: 0.35 }}
+      className="glass-panel-elevated p-6"
     >
-      <div className={`px-2 py-1 rounded-md text-[10px] font-semibold uppercase border ${colors[severity]}`}>
-        {severity}
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm text-white/80 truncate">{title}</p>
-        <p className="text-xs text-white/40 flex items-center gap-1 mt-1">
-          <Clock size={10} />
-          {time}
-        </p>
+      <h2 className="text-lg font-semibold text-white mb-4">Recent Deployments</h2>
+      
+      <div className="space-y-3">
+        {deployments.map((dep, i) => (
+          <div key={i} className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/[0.02] transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center">
+              <GitBranch size={16} className="text-violet-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white">{dep.name}</p>
+              <p className="text-xs text-white/40">{dep.env}</p>
+            </div>
+            <span className={`px-2 py-1 text-xs font-medium rounded-md capitalize ${statusStyles[dep.status as keyof typeof statusStyles]}`}>
+              {dep.status.replace('-', ' ')}
+            </span>
+          </div>
+        ))}
       </div>
     </motion.div>
   );
 }
 
-// Command Palette Hint
-function CommandHint() {
+// Application Performance Chart
+function ApplicationPerformance() {
+  const data = Array.from({ length: 24 }, (_, i) => ({
+    time: `${String(i).padStart(2, '0')}:00`,
+    requests: 1500 + Math.random() * 1000,
+    errors: Math.floor(Math.random() * 10),
+    latency: 80 + Math.random() * 60,
+  }));
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.5 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel px-4 py-2.5 flex items-center gap-3"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+      className="glass-panel-elevated p-6"
     >
-      <Command size={14} className="text-white/40" />
-      <span className="text-sm text-white/50">Press</span>
-      <kbd className="kbd">⌘</kbd>
-      <kbd className="kbd">K</kbd>
-      <span className="text-sm text-white/50">to open command palette</span>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-white">Application Performance</h2>
+        <div className="flex items-center gap-4 text-xs">
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400" />Requests/min</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" />Errors</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-cyan-400" />Latency</span>
+        </div>
+      </div>
+
+      <div style={{ width: '100%', height: 200 }}>
+        <ResponsiveContainer>
+          <LineChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} interval={3} />
+            <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} width={35} />
+            <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10 }} width={35} />
+            <Tooltip contentStyle={{ background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '11px' }} />
+            <Line yAxisId="left" type="monotone" dataKey="requests" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+            <Line yAxisId="right" type="monotone" dataKey="latency" stroke="#06b6d4" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4 mt-6 pt-4 border-t border-white/[0.06]">
+        {[
+          { label: 'Request Rate', value: '1.9K/min' },
+          { label: 'Errors (5min)', value: '0' },
+          { label: 'Avg Latency', value: '111ms' },
+          { label: 'Success Rate', value: '99.98%' },
+        ].map((stat) => (
+          <div key={stat.label} className="text-center">
+            <p className="text-xl font-bold text-white">{stat.value}</p>
+            <p className="text-xs text-white/40 mt-0.5">{stat.label}</p>
+          </div>
+        ))}
+      </div>
     </motion.div>
   );
 }
 
 export default function Dashboard() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [metrics, setMetrics] = useState({
-    cpu: { value: 42, data: generateSparklineData(20, 'stable') },
-    memory: { value: 67, data: generateSparklineData(20, 'up') },
-    disk: { value: 54, data: generateSparklineData(20, 'stable') },
-    network: { value: 23, data: generateSparklineData(20, 'down') },
-  });
+  const [chartData] = useState(generateTimeSeriesData);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setMetrics(prev => ({
-        cpu: { 
-          value: Math.max(0, Math.min(100, prev.cpu.value + (Math.random() * 6 - 3))),
-          data: [...prev.cpu.data.slice(1), { time: 20, value: prev.cpu.value }]
-        },
-        memory: { 
-          value: Math.max(0, Math.min(100, prev.memory.value + (Math.random() * 4 - 1.5))),
-          data: [...prev.memory.data.slice(1), { time: 20, value: prev.memory.value }]
-        },
-        disk: { 
-          value: Math.max(0, Math.min(100, prev.disk.value + (Math.random() * 2 - 1))),
-          data: [...prev.disk.data.slice(1), { time: 20, value: prev.disk.value }]
-        },
-        network: { 
-          value: Math.max(0, Math.min(100, prev.network.value + (Math.random() * 10 - 5))),
-          data: [...prev.network.data.slice(1), { time: 20, value: prev.network.value }]
-        },
-      }));
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const getStatus = (value: number): 'success' | 'warning' | 'danger' => {
-    if (value >= 85) return 'danger';
-    if (value >= 70) return 'warning';
-    return 'success';
-  };
-
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-8">
       <div className="ambient-bg" />
       
       {/* Header */}
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-50 border-b border-white/[0.06] bg-obsidian-950/80 backdrop-blur-xl"
+        className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#050507]/80 backdrop-blur-xl"
       >
-        <div className="max-w-[1600px] mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1800px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
               <Zap size={20} className="text-white" />
             </div>
             <div>
               <h1 className="text-lg font-semibold text-white tracking-tight">Obsidian</h1>
-              <p className="text-xs text-white/40">Infrastructure Monitor</p>
+              <p className="text-xs text-white/40">Enterprise Monitoring</p>
             </div>
           </div>
           
@@ -286,131 +540,51 @@ export default function Dashboard() {
               <div className="status-dot status-online" />
               <span className="text-sm text-white/70">All Systems Operational</span>
             </div>
-            <div className="text-right">
-              <p className="text-sm font-mono text-white/70">
-                {currentTime.toLocaleTimeString('en-US', { hour12: false })}
-              </p>
-              <p className="text-xs text-white/40">
-                {currentTime.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-              </p>
+            <div className="text-xs text-white/40">
+              Last Update: {currentTime.toLocaleTimeString()}
+            </div>
+            <div className="glass-panel px-3 py-1.5 text-xs text-white/50">
+              3,881 Resources
             </div>
           </div>
         </div>
       </motion.header>
 
       {/* Main Content */}
-      <main className="max-w-[1600px] mx-auto px-6 py-8">
-        {/* Metrics Grid */}
-        <section className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-medium text-white/50 uppercase tracking-wider">System Metrics</h2>
-            <span className="text-xs text-white/30">Live</span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <MetricCard
-              label="CPU Usage"
-              value={Math.round(metrics.cpu.value)}
-              unit="%"
-              status={getStatus(metrics.cpu.value)}
-              icon={Cpu}
-              sparklineData={metrics.cpu.data}
-              trend={{ value: 2.4, direction: 'up' }}
-              shortcut="C"
-            />
-            <MetricCard
-              label="Memory"
-              value={Math.round(metrics.memory.value)}
-              unit="%"
-              status={getStatus(metrics.memory.value)}
-              icon={Activity}
-              sparklineData={metrics.memory.data}
-              trend={{ value: 5.1, direction: 'up' }}
-              shortcut="M"
-            />
-            <MetricCard
-              label="Disk I/O"
-              value={Math.round(metrics.disk.value)}
-              unit="%"
-              status={getStatus(metrics.disk.value)}
-              icon={HardDrive}
-              sparklineData={metrics.disk.data}
-              trend={{ value: 0.8, direction: 'down' }}
-              shortcut="D"
-            />
-            <MetricCard
-              label="Network"
-              value={Math.round(metrics.network.value)}
-              unit="Mbps"
-              status={getStatus(metrics.network.value)}
-              icon={Network}
-              sparklineData={metrics.network.data}
-              trend={{ value: 12.3, direction: 'down' }}
-              shortcut="N"
-            />
-          </div>
-        </section>
+      <main className="max-w-[1800px] mx-auto px-6 py-6 space-y-6">
+        {/* KPI Row */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <KPICard icon={Server} value="3,458" label="Total Assets" trend="up" trendValue="+5.2%" color="blue" />
+          <KPICard icon={Shield} value="99.98%" label="Uptime SLA" trend="stable" trendValue="stable" color="emerald" />
+          <KPICard icon={AlertCircle} value="12" label="Critical Issues" trend="down" trendValue="-3" color="rose" />
+          <KPICard icon={AlertTriangle} value="169" label="Active Alerts" color="amber" />
+          <KPICard icon={CheckCircle} value="94%" label="Compliance" trend="up" trendValue="+2%" color="violet" />
+          <KPICard icon={TrendingDown} value="$127.8K" label="Monthly Cost" trend="down" trendValue="-8%" color="cyan" />
+        </div>
 
-        {/* Two Column Layout */}
+        {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Services */}
-          <motion.section 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:col-span-2 glass-panel-elevated p-6"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-sm font-medium text-white/50 uppercase tracking-wider">Services</h2>
-              <kbd className="kbd">S</kbd>
-            </div>
-            <div className="space-y-1">
-              <ServiceItem name="API Gateway" status="healthy" latency={45} icon={Globe} />
-              <ServiceItem name="Database Cluster" status="healthy" latency={12} icon={Database} />
-              <ServiceItem name="Cache Layer" status="degraded" latency={234} icon={Zap} />
-              <ServiceItem name="Auth Service" status="healthy" latency={28} icon={Shield} />
-              <ServiceItem name="Worker Nodes" status="healthy" latency={67} icon={Server} />
-              <ServiceItem name="Message Queue" status="healthy" latency={8} icon={Terminal} />
-            </div>
-          </motion.section>
+          <div className="lg:col-span-2">
+            <PerformanceChart data={chartData} />
+          </div>
+          <AlertDistribution />
+        </div>
 
-          {/* Recent Alerts */}
-          <motion.section 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="glass-panel-elevated p-6"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-sm font-medium text-white/50 uppercase tracking-wider">Recent Alerts</h2>
-              <kbd className="kbd">A</kbd>
-            </div>
-            <div className="space-y-1">
-              <AlertItem 
-                title="High memory usage on node-03" 
-                time="2 min ago" 
-                severity="warning" 
-              />
-              <AlertItem 
-                title="SSL certificate expiring soon" 
-                time="1 hour ago" 
-                severity="info" 
-              />
-              <AlertItem 
-                title="Database connection pool exhausted" 
-                time="3 hours ago" 
-                severity="critical" 
-              />
-              <AlertItem 
-                title="Disk space below 20% on storage-01" 
-                time="5 hours ago" 
-                severity="warning" 
-              />
-            </div>
-          </motion.section>
+        {/* Infrastructure */}
+        <InfrastructureOverview />
+
+        {/* Service Health & Network */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ServiceHealthMatrix />
+          <ApplicationPerformance />
+        </div>
+
+        {/* Events & Deployments */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <CriticalEvents />
+          <RecentDeployments />
         </div>
       </main>
-
-      <CommandHint />
     </div>
   );
 }
